@@ -99,7 +99,7 @@ const MainPage = () => {
     const fetchNotices = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8080/api/notice/list",
+          "http://ion_spring_app:8080/api/notice/list",
           getAuthHeader()
         );
         const sorted = res.data.sort(

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getAuthHeader } from "../util/authHeader";
 
-const API_SERVER_HOST = "http://localhost:8080";
+const API_SERVER_HOST = "http://ion_spring_app:8080";
 const prefix = `${API_SERVER_HOST}/api/notice`;
 
 // 공지사항 글 작성

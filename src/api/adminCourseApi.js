@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getAuthHeader } from "../util/authHeader";
 
-export const API_SERVER_HOST = "http://localhost:8080";
+export const API_SERVER_HOST = "http://ion_spring_app:8080";
 const prefix = `${API_SERVER_HOST}/api/admin/courses`;
 
 // 학과 필터로 과목 목록 조회 (공통 포함)

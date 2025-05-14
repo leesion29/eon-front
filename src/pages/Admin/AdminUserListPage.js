@@ -159,7 +159,7 @@ const AdminUserListPage = () => {
                     <img
                       src={
                         hoveredUser.userImgUrl
-                          ? `http://localhost:8080${hoveredUser.userImgUrl}`
+                          ? `http://ion_spring_app:8080${hoveredUser.userImgUrl}`
                           : "/images/noImage.jpg"
                       }
                       alt="프로필"

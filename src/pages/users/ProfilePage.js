@@ -47,7 +47,7 @@ const ProfilePage = () => {
   const fetchStudentInfo = async (userId) => {
     try {
       const res = await axios.get(
-        `http://localhost:8080/api/user/${userId}`,
+        `http://ion_spring_app:8080/api/user/${userId}`,
         getAuthHeader()
       );
       const data = res.data;
@@ -133,7 +133,7 @@ const ProfilePage = () => {
             <img
               src={
                 formData.userImgUrl
-                  ? `http://localhost:8080${formData.userImgUrl}`
+                  ? `http://ion_spring_app:8080${formData.userImgUrl}`
                   : "/default-profile.jpg"
               }
               alt="Profile"

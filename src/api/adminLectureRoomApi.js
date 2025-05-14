@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getAuthHeader } from "../util/authHeader";
 
-export const API_SERVER_HOST = "http://localhost:8080";
+export const API_SERVER_HOST = "http://ion_spring_app:8080";
 const prefix = `${API_SERVER_HOST}/api/admin/lecture-rooms`;
 
 //  특정 건물(buildingId)의 강의실 목록 조회

@@ -44,7 +44,7 @@ const NoticeDataPage = () => {
   const handleView = useCallback(async () => {
     try {
       await axios.put(
-        `http://localhost:8080/api/notice/update/${noticeId}`,
+        `http://ion_spring_app:8080/api/notice/update/${noticeId}`,
         null,
         getAuthHeader()
       );
@@ -56,7 +56,7 @@ const NoticeDataPage = () => {
   const handleDelete = async (noticeId) => {
     try {
       await axios.delete(
-        `http://localhost:8080/api/notice/delete/${noticeId}`,
+        `http://ion_spring_app:8080/api/notice/delete/${noticeId}`,
         getAuthHeader()
       );
       setAlertData("success", "삭제되었습니다.", null);
@@ -78,7 +78,7 @@ const NoticeDataPage = () => {
     const fetchContentInfo = async (id) => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/notice/${id}`,
+          `http://ion_spring_app:8080/api/notice/${id}`,
           getAuthHeader()
         );
         setContentInfo(response.data);
