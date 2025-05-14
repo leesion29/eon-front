@@ -17,7 +17,7 @@ const ChangepwPage = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const API_SERVER_HOST = "http://ion_spring_app:8080";
+  const API_SERVER_HOST = "https://ion_spring_app:8080";
   const prefix = `${API_SERVER_HOST}/api/user`;
   const handlePasswordChange = async (e) => {
     e.preventDefault();

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getAuthHeader } from "../util/authHeader"; // 인증 헤더 유틸 임포트
 
-export const API_SERVER_HOST = "http://ion_spring_app:8080";
+export const API_SERVER_HOST = "https://ion_spring_app:8080";
 const prefix = `${API_SERVER_HOST}/api/professor`;
 
 // 교수의 강의 목록 조회

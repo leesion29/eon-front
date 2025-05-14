@@ -96,7 +96,7 @@ const UserInfo = () => {
   return (
     <div className="text-sm text-gray-600 flex flex-wrap items-center">
       <img
-        src={`http://ion_spring_app:8080${userInfo.userImgUrl}`}
+        src={`https://ion_spring_app:8080${userInfo.userImgUrl}`}
         alt="프로필 이미지"
         className="w-[45px] h-[45px] object-cover rounded-full mr-4 border border-gray-400"
       />

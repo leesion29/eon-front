@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getAuthHeader } from "../util/authHeader";
 
-const API_SERVER_HOST = "http://ion_spring_app:8080";
+const API_SERVER_HOST = "https://ion_spring_app:8080";
 const prefix = `${API_SERVER_HOST}/api/admin/buildings`;
 
 // 전체 건물 목록 조회

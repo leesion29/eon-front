@@ -37,7 +37,7 @@ const ResetPasswordPage = () => {
 
     try {
       const res = await axios.post(
-        "http://ion_spring_app:8080/api/user/reset-password",
+        "https://ion_spring_app:8080/api/user/reset-password",
         {
           token,
           password,
