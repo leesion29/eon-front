@@ -11,7 +11,7 @@ const images = [
 async function findUserPw(formData) {
   try {
     const response = await fetch(
-      "https://ion_spring_app:8080/api/user/finduserPassword",
+      "https://www.eonuniversity.co.kr/api/user/finduserPassword",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

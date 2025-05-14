@@ -47,7 +47,7 @@ const ProfilePage = () => {
   const fetchStudentInfo = async (userId) => {
     try {
       const res = await axios.get(
-        `https://ion_spring_app:8080/api/user/${userId}`,
+        `https://www.eonuniversity.co.kr/api/user/${userId}`,
         getAuthHeader()
       );
       const data = res.data;
@@ -133,7 +133,7 @@ const ProfilePage = () => {
             <img
               src={
                 formData.userImgUrl
-                  ? `https://ion_spring_app:8080${formData.userImgUrl}`
+                  ? `https://www.eonuniversity.co.kr${formData.userImgUrl}`
                   : "/default-profile.jpg"
               }
               alt="Profile"

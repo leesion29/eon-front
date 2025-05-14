@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getAuthHeader } from "../util/authHeader";
-const API_SERVER_HOST = "https://ion_spring_app:8080";
+const API_SERVER_HOST = "https://www.eonuniversity.co.kr";
 const prefix = `${API_SERVER_HOST}/api/students/evaluation`;
 const prefix2 = `${API_SERVER_HOST}/api/professor/evaluation`;
 

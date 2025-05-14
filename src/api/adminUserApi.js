@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getAuthHeader } from "../util/authHeader";
 
-export const API_SERVER_HOST = "https://ion_spring_app:8080";
+export const API_SERVER_HOST = "https://www.eonuniversity.co.kr";
 const prefix = `${API_SERVER_HOST}/api/admin`;
 
 // 사용자 생성

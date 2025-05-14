@@ -26,7 +26,7 @@ function RegisterComponent() {
     setMessage("");
 
     try {
-      const response = await fetch("https://ion_spring_app:8080/api/user/register", {
+      const response = await fetch("https://www.eonuniversity.co.kr/api/user/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

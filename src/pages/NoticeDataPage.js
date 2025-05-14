@@ -44,7 +44,7 @@ const NoticeDataPage = () => {
   const handleView = useCallback(async () => {
     try {
       await axios.put(
-        `https://ion_spring_app:8080/api/notice/update/${noticeId}`,
+        `https://www.eonuniversity.co.kr/api/notice/update/${noticeId}`,
         null,
         getAuthHeader()
       );
@@ -56,7 +56,7 @@ const NoticeDataPage = () => {
   const handleDelete = async (noticeId) => {
     try {
       await axios.delete(
-        `https://ion_spring_app:8080/api/notice/delete/${noticeId}`,
+        `https://www.eonuniversity.co.kr/api/notice/delete/${noticeId}`,
         getAuthHeader()
       );
       setAlertData("success", "삭제되었습니다.", null);
@@ -78,7 +78,7 @@ const NoticeDataPage = () => {
     const fetchContentInfo = async (id) => {
       try {
         const response = await axios.get(
-          `https://ion_spring_app:8080/api/notice/${id}`,
+          `https://www.eonuniversity.co.kr/api/notice/${id}`,
           getAuthHeader()
         );
         setContentInfo(response.data);

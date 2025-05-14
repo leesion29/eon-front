@@ -159,7 +159,7 @@ const AdminUserListPage = () => {
                     <img
                       src={
                         hoveredUser.userImgUrl
-                          ? `https://ion_spring_app:8080${hoveredUser.userImgUrl}`
+                          ? `https://www.eonuniversity.co.kr${hoveredUser.userImgUrl}`
                           : "/images/noImage.jpg"
                       }
                       alt="프로필"
