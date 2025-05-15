@@ -134,23 +134,24 @@ function LoginPage() {
         <div className="absolute inset-0 bg-black bg-opacity-40 z-10" />
       </div>
 
-      <div className="fixed top-8 left-8 z-20">
-        <div className="flex items-center space-x-4">
+      {/* Logo and University Name - Adjusted for smaller screens */}
+      <div className="fixed top-4 left-4 sm:top-8 sm:left-8 z-20">
+        <div className="flex items-center space-x-2 sm:space-x-4">
           <img
             src="/images/eonLogo.jpg"
             alt="EON Logo"
-            className="w-20 h-20 rounded-full"
+            className="w-12 h-12 sm:w-16 md:w-20 sm:h-16 md:h-20 rounded-full"
           />
           <div>
-            <h1 className="text-white text-3xl font-bold">이온대학교</h1>
-            <p className="text-white text-base">EON UNIVERSITY</p>
+            <h1 className="text-white text-xl sm:text-2xl md:text-3xl font-bold">이온대학교</h1>
+            <p className="text-white text-xs sm:text-sm md:text-base">EON UNIVERSITY</p>
           </div>
         </div>
       </div>
 
-      {/* hidden [@media(max-width:1100)]:hidden xl:block 이부분 조절하면 창 줄어듬 */}
-      <div className="fixed left-32 top-1/2 transform -translate-y-1/2 z-10 hidden [@media(max-width:1100)]:hidden xl:block">
-        <p className="text-5xl font-extrabold leading-relaxed text-white text-opacity-90">
+      {/* Left-side Motivational Text - Using existing xl:block logic, ensures it's hidden on smaller screens */}
+      <div className="fixed left-8 sm:left-16 md:left-24 lg:left-32 top-1/2 transform -translate-y-1/2 z-10 hidden xl:block">
+        <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-relaxed text-white text-opacity-90">
           <span className="block">기술이 아닌,</span>
           <span className="block">가능성을 설계합니다.</span>
           <span className="block">AI시대 배움의 기준이 되다.</span>
@@ -158,16 +159,17 @@ function LoginPage() {
         </p>
       </div>
 
-      <div className="absolute inset-0 flex items-center justify-end pr-32 z-30">
-        <div className="w-full max-w-md bg-white bg-opacity-90 p-6 rounded-lg shadow-md">
-          <h2 className="text-left text-3xl font-bold text-blue-900 mb-8">
+      {/* Login Form Container - Centered on small screens, right-aligned on md and up */}
+      <div className="absolute inset-0 flex items-center justify-center md:justify-end p-4 md:p-0 md:pr-16 lg:pr-24 xl:pr-32 z-30">
+        <div className="w-full max-w-md bg-white bg-opacity-90 p-4 sm:p-6 rounded-lg shadow-md">
+          <h2 className="text-left text-2xl sm:text-3xl font-bold text-blue-900 mb-6 sm:mb-8">
             EON Login
           </h2>
 
           <div className="relative mb-3">
             <ul className="flex mb-2">
               <li
-                className={`px-6 py-2 rounded-t-lg border-2 border-blue-800 border-b-0 text-sm font-semibold cursor-pointer ${
+                className={`px-4 py-2 sm:px-6 rounded-t-lg border-2 border-blue-800 border-b-0 text-xs sm:text-sm font-semibold cursor-pointer ${
                   activeTab === "tab_login1"
                     ? "text-blue-800"
                     : "text-gray-400 bg-gray-100"
@@ -184,21 +186,21 @@ function LoginPage() {
               </li>
             </ul>
 
+            {/* Tab underline: Reverted to w-full left-0 for narrow, specific style for sm and up */}
             <div
-              className="absolute top-full h-0.5 bg-blue-800 w-72 z-0"
-              style={{ left: "108px" }}
+              className="absolute top-full h-0.5 bg-blue-800 z-0 w-full left-0 sm:w-72 sm:left-[108px]"
             />
           </div>
 
           {message && (
-            <p className="text-red-500 text-center mb-2">{message}</p>
+            <p className="text-red-500 text-center text-sm sm:text-base mb-2">{message}</p>
           )}
 
           <div className="bg-white border border-gray-300 rounded px-3 py-2 mb-3 flex items-center">
             <img
               src="/images/id.jpg"
               alt="User Icon"
-              className="w-6 h-6 mr-2"
+              className="w-5 h-5 sm:w-6 sm:h-6 mr-2"
             />
             <input
               type="text"
@@ -207,19 +209,19 @@ function LoginPage() {
               value={user.userId}
               onChange={handleChange}
               onKeyDown={handleKeyPress}
-              className="w-3/4 outline-none bg-white"
+              className="w-full sm:w-3/4 outline-none bg-white text-sm sm:text-base"
             />
-            <label className="flex items-center gap-2 whitespace-nowrap">
+            <label className="flex items-center gap-1 sm:gap-2 whitespace-nowrap ml-auto">
               <input
                 type="checkbox"
                 id = "rememberId"
                 name="remember"
-                className="w-4 h-3"
+                className="w-3 h-3 sm:w-4 sm:h-3"
                 checked={user.remember}
                 onChange={handleChange}
                 onClick={handleChecked}
               />
-              <span className="text-sm text-gray-500">학번 저장</span>
+              <span className="text-xs sm:text-sm text-gray-500">학번 저장</span>
             </label>
           </div>
 
@@ -227,7 +229,7 @@ function LoginPage() {
             <img
               src="/images/pw.jpg"
               alt="Lock Icon"
-              className="w-6 h-6 mr-2"
+              className="w-5 h-5 sm:w-6 sm:h-6 mr-2"
             />
             <input
               type={showPassword ? "text" : "password"}
@@ -236,23 +238,23 @@ function LoginPage() {
               value={user.userPassword}
               onChange={handleChange}
               onKeyDown={handleKeyPress}
-              className="w-full outline-none bg-white pr-8"
+              className="w-full outline-none bg-white pr-8 text-sm sm:text-base"
             />
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2"
+              className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2"
             >
               <img
                 src={showPassword ? "/images/showPw.png" : "/images/HidePw.png"}
                 alt="비밀번호 보기 토글"
-                className="w-5 h-5 opacity-70 hover:opacity-100"
+                className="w-4 h-4 sm:w-5 sm:h-5 opacity-70 hover:opacity-100"
               />
             </button>
           </div>
 
-          <ul className="flex justify-end text-sm mb-5">
-            <li className="px-3">
+          <ul className="flex justify-end text-xs sm:text-sm mb-5">
+            <li className="px-2 sm:px-3">
               <button
                 onClick={() => setShowFindIdModal(true)}
                 className="text-gray-400 hover:text-gray-800"
@@ -263,7 +265,7 @@ function LoginPage() {
             <li>
               <div className="text-gray-400">|</div>
             </li>
-            <li className="px-3">
+            <li className="px-2 sm:px-3">
               <button
                 onClick={() => setShowFindPwModal(true)}
                 className="text-gray-400 hover:text-gray-800"
@@ -275,13 +277,13 @@ function LoginPage() {
 
           <button
             onClick={handleLogin}
-            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-800 mb-3"
+            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-800 mb-3 text-sm sm:text-base"
           >
             로그인
           </button>
 
           <div className="text-xs text-gray-500 mt-4 text-left mb-3">
-            <ul>
+            <ul className="space-y-1">
               <li>
                 * 최초 로그인 시 반드시 비밀번호를 변경해 주시기 바랍니다.
               </li>
@@ -297,22 +299,22 @@ function LoginPage() {
       </div>
 
       {showFindIdModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40">
-          <div className="bg-white bg-opacity-90 p-8 rounded-lg w-full max-w-md relative">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40 p-4">
+          <div className="bg-white bg-opacity-90 p-6 sm:p-8 rounded-lg w-full max-w-md relative">
             <button
-              className="absolute top-2 right-2 text-gray-500"
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl sm:text-2xl"
               onClick={() => setShowFindIdModal(false)}
             >
               ✕
             </button>
-            <form onSubmit={handleFindIdSubmit} className="space-y-5">
-              <h2 className="text-2xl text-blue-800 font-bold text-center mb-2">
+            <form onSubmit={handleFindIdSubmit} className="space-y-4 sm:space-y-5">
+              <h2 className="text-xl sm:text-2xl text-blue-800 font-bold text-center mb-2">
                 학번 찾기
               </h2>
               <input
                 name="userName"
                 placeholder="이름"
-                className="w-full p-2 border rounded focus:outline-none"
+                className="w-full p-2 border rounded focus:outline-none text-sm sm:text-base"
                 required
                 onChange={(e) =>
                   setFindIdForm({ ...findIdForm, userName: e.target.value })
@@ -321,7 +323,7 @@ function LoginPage() {
               <input
                 name="userPhone"
                 placeholder="010-0000-0000"
-                className="w-full p-2 border rounded focus:outline-none"
+                className="w-full p-2 border rounded focus:outline-none text-sm sm:text-base"
                 required
                 onChange={(e) =>
                   setFindIdForm({ ...findIdForm, userPhone: e.target.value })
@@ -330,7 +332,7 @@ function LoginPage() {
               <input
                 name="userEmail"
                 placeholder="이메일"
-                className="w-full p-2 border rounded focus:outline-none"
+                className="w-full p-2 border rounded focus:outline-none text-sm sm:text-base"
                 required
                 onChange={(e) =>
                   setFindIdForm({ ...findIdForm, userEmail: e.target.value })
@@ -338,7 +340,7 @@ function LoginPage() {
               />
               <button
                 type="submit"
-                className="w-full bg-blue-400 text-white py-2 rounded hover:bg-blue-800"
+                className="w-full bg-blue-400 text-white py-2 rounded hover:bg-blue-800 text-sm sm:text-base"
               >
                 학번 찾기
               </button>
@@ -348,22 +350,22 @@ function LoginPage() {
       )}
 
       {showFindPwModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40">
-          <div className="bg-white bg-opacity-90 p-6 rounded-lg w-full max-w-md relative">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40 p-4">
+          <div className="bg-white bg-opacity-90 p-6 sm:p-8 rounded-lg w-full max-w-md relative">
             <button
-              className="absolute top-2 right-2 text-gray-500"
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl sm:text-2xl"
               onClick={() => setShowFindPwModal(false)}
             >
               ✕
             </button>
-            <form onSubmit={handleFindPwSubmit} className="space-y-5">
-              <h2 className="text-2xl text-blue-800 font-bold text-center mb-2">
+            <form onSubmit={handleFindPwSubmit} className="space-y-4 sm:space-y-5">
+              <h2 className="text-xl sm:text-2xl text-blue-800 font-bold text-center mb-2">
                 비밀번호 찾기
               </h2>
               <input
                 name="userId"
                 placeholder="학번"
-                className="w-full p-2 border rounded focus:outline-none"
+                className="w-full p-2 border rounded focus:outline-none text-sm sm:text-base"
                 required
                 onChange={(e) =>
                   setFindPwForm({ ...findPwForm, userId: e.target.value })
@@ -372,7 +374,7 @@ function LoginPage() {
               <input
                 name="userEmail"
                 placeholder="이메일"
-                className="w-full p-2 border rounded focus:outline-none"
+                className="w-full p-2 border rounded focus:outline-none text-sm sm:text-base"
                 required
                 onChange={(e) =>
                   setFindPwForm({ ...findPwForm, userEmail: e.target.value })
@@ -380,7 +382,7 @@ function LoginPage() {
               />
               <button
                 type="submit"
-                className="w-full bg-blue-400 text-white py-2 rounded hover:bg-blue-800"
+                className="w-full bg-blue-400 text-white py-2 rounded hover:bg-blue-800 text-sm sm:text-base"
               >
                 비밀번호 찾기
               </button>
@@ -390,17 +392,17 @@ function LoginPage() {
       )}
 
       {showResultModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg w-full max-w-sm shadow-md relative">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
+          <div className="bg-white p-6 sm:p-8 rounded-lg w-full max-w-sm shadow-md relative">
             <button
-              className="absolute top-2 right-2 text-gray-500"
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl sm:text-2xl"
               onClick={() => setShowResultModal(false)}
             >
               ✕
             </button>
-            <p className="text-center text-gray-800">{resultMessage}</p>
+            <p className="text-center text-gray-800 text-sm sm:text-base">{resultMessage}</p>
             <button
-              className="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-700"
+              className="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-700 text-sm sm:text-base"
               onClick={() => setShowResultModal(false)}
             >
               확인
