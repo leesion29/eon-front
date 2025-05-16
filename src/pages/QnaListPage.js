@@ -9,7 +9,7 @@ const QnaListPage = () => {
   const [alertModalOpen, setAlertModalOpen] = useState(false);
   const [type, setType] = useState("");
   const [msg, setMsg] = useState("");
-  const [goTarget, setGoTarget] = useState(null); // 이동할 정보 저장
+  const [goTarget, setGoTarget] = useState(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -25,23 +25,36 @@ const QnaListPage = () => {
   const itemCount = 15;
 
   useEffect(() => {
+    if (location.state?.keyword && location.state.keyword !== inputKeyword) {
+      setInputKeyword(location.state.keyword);
+    }
+  }, [location.state?.keyword]);
+
+  useEffect(() => {
     if (userId) {
       fetchQnaInfo();
     }
-  }, [userId, keyword]);
+  }, [userId, keyword, currentPage]);
 
   const fetchQnaInfo = async () => {
     try {
       const data = await getQnaList();
-      console.log(data);
       const filtered = keyword
-      ? data.filter(
-          (n) => n.title.includes(keyword) || n.content.includes(keyword)
-        )
-      : data;
+        ? data.filter(
+            (n) => n.title.includes(keyword) || n.content.includes(keyword)
+          )
+        : data;
       setQnaInfo(filtered);
+      if (filtered.length === 0 && keyword) {
+        setMessage(`"${keyword}" 관련 검색 결과가 없습니다.`);
+      } else if (filtered.length === 0 && !keyword) {
+        setMessage("등록된 Q&A가 없습니다.");
+      } else {
+        setMessage("");
+      }
     } catch (error) {
       setMessage("Q&A 정보를 불러올 수 없습니다.");
+      setQnaInfo([]);
     }
   };
 
@@ -50,14 +63,14 @@ const QnaListPage = () => {
       const data = await getWriterId(id);
       return data;
     } catch (error) {
-      setMessage("작성자 정보를 불러올 수 없습니다.");
+      console.error("작성자 정보 로딩 실패:", error);
     }
   };
 
   const setAlertData = (modalType, modalMsg, target = null) => {
     setType(modalType);
     setMsg(modalMsg);
-    setGoTarget(target); // navigate 정보 저장
+    setGoTarget(target);
     setAlertModalOpen(true);
   };
 
@@ -67,7 +80,7 @@ const QnaListPage = () => {
       navigate("/main/qnadata", {
         state: goTarget,
       });
-      setGoTarget(null); // navigate 초기화
+      setGoTarget(null);
     }
   };
 
@@ -80,173 +93,214 @@ const QnaListPage = () => {
   const currentItem = qnaInfo.slice(firstItem, lastItem);
   const totalPage = Math.ceil(qnaInfo.length / itemCount);
 
-    // 검색 처리
-    const handleKeyword = () => {
-      const userInputData = document.getElementById('searchKeyword').value;
-      setInputKeyword(userInputData);
-    }
+  const handleKeywordChange = () => {
+    const userInputData = document.getElementById("searchKeyword").value;
+    setInputKeyword(userInputData);
+  };
 
-    const handleSearch = async (searchKeyword) => {
-      setKeyword(searchKeyword);
+  const handleSearch = () => {
+    setKeyword(inputKeyword);
+    setCurrentPage(1);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-8 bg-white shadow-md rounded-md mt-10">
-      <h1 className="text-3xl font-bold text-center mb-6">Q&A</h1>
+    <div className="max-w-7xl mx-auto p-3 sm:p-4 md:p-6 lg:p-8 bg-white shadow-md rounded-md mt-4 sm:mt-6 md:mt-8 lg:mt-10">
+      <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-center mb-3 sm:mb-4 md:mb-5 lg:mb-6">
+        Q&A
+      </h1>
       {keyword && (
-        <p className="text-sm text-center text-gray-600 mb-2">
+        <p className="text-[10px] sm:text-xs md:text-sm text-center text-gray-600 mb-2 sm:mb-3 md:mb-4">
           🔍 "<span className="font-semibold">{keyword}</span>" 관련 검색
           결과입니다.
         </p>
       )}
-            <div className="flex justify-end mb-6">
+      <div className="flex flex-col sm:flex-row sm:justify-end items-center mb-3 sm:mb-4 md:mb-5 lg:mb-6 gap-1.5 sm:gap-2">
         <input
           type="text"
           placeholder="검색어 입력"
           id="searchKeyword"
-          className="px-3 py-2 w-64 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          onChange={handleKeyword}
+          value={inputKeyword}
+          className="px-2 py-1 w-full sm:w-48 md:w-56 lg:w-64 border border-gray-300 rounded shadow-sm text-[10px] sm:text-xs md:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+          onChange={handleKeywordChange}
+          onKeyDown={handleKeyDown}
         />
         <button
-          onClick={() => handleSearch(inputKeyword)}
-          className="px-5 py-2 ml-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-semibold"
+          onClick={handleSearch}
+          className="px-3 py-1 w-full sm:w-auto whitespace-nowrap bg-blue-600 hover:bg-blue-700 text-white rounded shadow-sm text-[10px] sm:text-xs md:text-sm font-semibold"
         >
           검색 🔍
         </button>
       </div>
 
-      {message && <p className="text-red-500 text-center">{message}</p>}
-      <hr />
-      <br />
-      <div>
-        <table className="table-auto border-collapse border border-gray-400 w-full border-x-0">
-          <thead className="bg-blue-800 text-white">
+      {message && !alertModalOpen && (
+        <p className="text-red-500 text-center py-1 text-[10px] sm:text-xs">
+          {message}
+        </p>
+      )}
+      <hr className="my-2 sm:my-3 md:my-4" />
+
+      <div className="w-full overflow-x-auto">
+        <table className="w-full border-collapse table-auto">
+          <colgroup>
+            <col className="w-[10%] min-w-[30px] sm:w-[8%] md:w-[7%] lg:w-[6%]" />
+            <col className="w-[30%] min-w-[90px] sm:w-auto" />
+            <col className="w-[18%] min-w-[55px] sm:w-[15%] md:w-[15%] lg:w-[12%]" />
+            <col className="w-[17%] min-w-[65px] sm:w-[20%] md:w-[15%]" />
+            <col className="w-[12%] min-w-[40px] sm:w-[12%] md:w-[10%] lg:w-[8%]" />
+            <col className="w-[13%] min-w-[40px] sm:w-[10%] md:w-[10%] lg:w-[8%]" />
+          </colgroup>
+          {/* PC에서 너무 작지 않도록 thead 폰트 크기 복원 */}
+          <thead className="bg-blue-800 text-white text-[9px] xs:text-[10px] sm:text-xs md:text-sm">
             <tr>
-              <th className="border border-blue-800 border-x-0 px-4 py-2">
+              {/* 모바일: px-0.5 py-1 font-normal whitespace-nowrap
+                      sm 이상: sm:px-2 sm:py-1.5 sm:font-medium (PC에서 적절한 높이와 두께)
+                    */}
+              <th className="px-0.5 py-1 text-center font-normal whitespace-nowrap sm:px-2 sm:py-1.5 sm:font-medium">
                 번호
               </th>
-              <th className="border border-blue-800 border-x-0 px-4 py-2">
+              <th className="px-0.5 py-1 text-center font-normal whitespace-nowrap sm:px-2 sm:py-1.5 sm:font-medium">
                 제목
               </th>
-              <th className="border border-blue-800 border-x-0 px-4 py-2">
+              <th className="px-0.5 py-1 text-center font-normal whitespace-nowrap sm:px-2 sm:py-1.5 sm:font-medium">
                 작성자
               </th>
-              <th className="border border-blue-800 border-x-0 px-4 py-2">
+              <th className="px-0.5 py-1 text-center font-normal whitespace-nowrap sm:px-2 sm:py-1.5 sm:font-medium">
                 작성일
               </th>
-              <th className="border border-blue-800 border-x-0 px-4 py-2">
+              <th className="px-0.5 py-1 text-center font-normal whitespace-nowrap sm:px-2 sm:py-1.5 sm:font-medium">
                 조회수
               </th>
-              <th className="border border-blue-800 border-x-0 px-4 py-2">
+              <th className="px-0.5 py-1 text-center font-normal whitespace-nowrap sm:px-2 sm:py-1.5 sm:font-medium">
                 상태
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="text-[9px] xs:text-[10px] sm:text-xs md:text-sm">
             {currentItem.length > 0 ? (
-              currentItem.map((qna, i) => (
-                <tr
-                  key={i}
-                  className={`text-center ${
-                    i % 2 === 0
-                      ? "hover:bg-blue-100 bg-blue-50"
-                      : "hover:bg-gray-100"
-                  }`}
-                >
-                  <td className="border border-gray-400 px-4 py-2 border-x-0">
-                    {firstItem + i + 1}
-                  </td>
-                  <td className="text-left border border-gray-400 px-4 py-2 border-x-0">
-                    {/\u{1F512}/u.test(qna.title) ? (
-                      <p
-                        className="text-gray-400 cursor-pointer"
-                        onClick={async () => {
-                          let writerId = await fetchWriterId(qna.questionId);
-                          const target = {
+              currentItem.map((qna, i) => {
+                const isSecret = /\u{1F512}/u.test(qna.title);
+                const rowClass =
+                  i % 2 === 0
+                    ? "bg-blue-50 hover:bg-blue-100"
+                    : "bg-white hover:bg-gray-100";
+
+                return (
+                  <tr
+                    key={qna.questionId || i}
+                    className={`${rowClass} border-b border-gray-300`}
+                  >
+                    <td className="px-0.5 py-1 sm:px-2 sm:py-1.5 text-center align-middle">
+                      {firstItem + i + 1}
+                    </td>
+                    <td className="px-0.5 py-1 sm:px-2 sm:py-2 text-left align-middle break-words">
+                      {isSecret ? (
+                        <p
+                          className="text-gray-500 hover:text-gray-700 cursor-pointer flex items-center"
+                          onClick={async () => {
+                            let writerId = await fetchWriterId(qna.questionId);
+                            const target = {
+                              questionId: qna.questionId,
+                              page: currentPage,
+                              keyword: keyword,
+                            };
+                            if (String(userId) === String(writerId)) {
+                              setAlertData(
+                                "success",
+                                "본인 확인 완료! 글을 조회합니다.",
+                                target
+                              );
+                            } else if (userRole !== "STUDENT") {
+                              setAlertData(
+                                "success",
+                                "권한 확인 완료! 글을 조회합니다.",
+                                target
+                              );
+                            } else {
+                              setAlertData(
+                                "error",
+                                "읽을 수 있는 권한이 없습니다."
+                              );
+                            }
+                          }}
+                        >
+                          {qna.title}
+                        </p>
+                      ) : (
+                        <Link
+                          to="/main/qnadata"
+                          state={{
                             questionId: qna.questionId,
                             page: currentPage,
-                          };
-                          if (String(userId) === String(writerId)) {
-                            setAlertData(
-                              "success",
-                              "본인 확인 완료! 글을 조회합니다.",
-                              target
-                            );
-                          } else if (userRole !== "STUDENT") {
-                            setAlertData(
-                              "success",
-                              "권한 확인 완료! 글을 조회합니다.",
-                              target
-                            );
-                          } else {
-                            setAlertData(
-                              "error",
-                              "읽을 수 있는 권한이 없습니다."
-                            );
-                          }
-                        }}
-                      >
-                        🔒 비밀글입니다.
-                      </p>
-                    ) : (
-                      <Link
-                        to="/main/qnadata"
-                        state={{
-                          questionId: qna.questionId,
-                          page: currentPage,
-                        }}
-                      >
-                        {qna.title}
-                      </Link>
-                    )}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2 border-x-0">
-                    {qna.userName}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2 border-x-0">
-                    {qna.createdAt}
-                  </td>
-                  <td className="border border-gray-400 px-4 py-2 border-x-0">
-                    {qna.viewCount}
-                  </td>
-                  <td
-                    className={
-                      qna.status === "미답변"
-                        ? "text-red-500 border border-gray-400 px-4 py-2 border-x-0"
-                        : "border border-gray-400 px-4 py-2 border-x-0"
-                    }
-                  >
-                    {qna.status}
-                  </td>
-                </tr>
-              ))
+                            keyword: keyword,
+                          }}
+                          className="hover:text-blue-600"
+                        >
+                          {qna.title}
+                        </Link>
+                      )}
+                    </td>
+                    <td className="px-0.5 py-1 sm:px-2 sm:py-1.5 text-center align-middle break-keep overflow-hidden whitespace-nowrap text-ellipsis">
+                      {qna.userName || "익명"}
+                    </td>
+                    <td className="px-0.5 py-1 sm:px-2 sm:py-1.5 text-center align-middle whitespace-nowrap">
+                      {qna.createdAt}
+                    </td>
+                    <td className="px-0.5 py-1 sm:px-2 sm:py-1.5 text-center align-middle">
+                      {qna.viewCount}
+                    </td>
+                    <td
+                      className={`px-0.5 py-1 sm:px-2 sm:py-1.5 text-center align-middle whitespace-nowrap ${
+                        qna.status === "미답변"
+                          ? "text-red-500"
+                          : "text-black"
+                      }`}
+                    >
+                      {qna.status}
+                    </td>
+                  </tr>
+                );
+              })
             ) : (
               <tr>
-                <td colSpan="6" className="text-center text-gray-500 py-4">
-                  Q&A 정보를 불러오는 중...
+                <td
+                  colSpan={6}
+                  className="text-center text-gray-500 py-6 sm:py-8 text-xs sm:text-sm"
+                >
+                  {message || "Q&A가 없습니다."}
                 </td>
               </tr>
             )}
           </tbody>
         </table>
-        <PageComponent
-          currentPage={currentPage}
-          totalPage={totalPage}
-          onPageChange={handlePage}
-        />
       </div>
-      <br />
+
+      {totalPage > 0 && (
+        <div className="mt-3 sm:mt-4 md:mt-6">
+          <PageComponent
+            currentPage={currentPage}
+            totalPage={totalPage}
+            onPageChange={handlePage}
+          />
+        </div>
+      )}
+
       {userRole !== "ADMIN" && (
-        <div className="flex justify-end mt-4">
+        <div className="flex justify-end mt-3 sm:mt-4">
           <Link
             to="/main/qnawrite"
-            className="bg-blue-500 hover:bg-blue-700 text-white text-sm font-semibold py-2.5 px-3 rounded transition float-right"
+            className="bg-blue-500 hover:bg-blue-700 text-white text-[9px] xs:text-[10px] sm:text-xs font-semibold py-1 px-2 sm:py-1.5 sm:px-3 md:py-2 md:px-3 rounded-md transition"
           >
-            &nbsp;등록&nbsp;
+            등록
           </Link>
         </div>
       )}
-      {/* 메시지 모달 */}
+
       <AlertModal
         isOpen={alertModalOpen}
         message={msg}

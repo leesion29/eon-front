@@ -35,17 +35,24 @@ const EvaluationPage = () => {
   const courseName = state.name;
 
   useEffect(() => {
+    if(!userId || !classId) return;
     const fetchData = async () => {
-      const questionData = await getQuestions();
-      setQuestions(questionData);
-      const statusData = await getStatus(userId);
-      setEvaluationStatus(statusData);
+      try {
+        const questionData = await getQuestions();
+        setQuestions(questionData);
+        const statusData = await getStatus(userId);
+        setEvaluationStatus(statusData);
+      } catch (error) {
+        console.error("데이터 조회 실패:", error);
+        setQuestions([]);
+        setEvaluationStatus([]);
+      }
     };
     fetchData();
-  }, [userId]);
+  }, [userId, classId]);
 
   useEffect(() => {
-    if (!Array.isArray(evaluationStatus) || evaluationStatus.length === 0) return;
+    if (!Array.isArray(evaluationStatus) || evaluationStatus.length === 0 || !classId) return;
     const isAlreadyEvaluated = evaluationStatus.some(
       (stat) => stat.classId === classId
     );
@@ -123,19 +130,21 @@ const EvaluationPage = () => {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto mt-10 p-8 sm:p-10 lg:p-12 bg-white shadow-md rounded-lg relative">
-      <p className="font-bold text-3xl text-blue-700">
-        강의 평가
-        <span className="font-normal text-sm float-right text-gray-400 pt-8">
+    <div className="w-full max-w-3xl mx-auto mt-6 md:mt-10 p-4 sm:p-6 md:p-8 lg:p-12 bg-white shadow-md rounded-lg relative">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b pb-3 md:pb-4 mb-4 md:mb-6">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-700 mb-2 sm:mb-0">
+          강의 평가
+        </h2>
+        <span className="text-xs sm:text-sm text-gray-500 sm:pt-2 md:pt-0">
           과목명 : {courseName}
         </span>
-      </p>
-      <hr className="mt-7" />
+      </div>
+      
 
       {questions.map((q, index) => (
-        <div className="my-12" key={q.question_id || index}>
-          <label className="block mb-2 text-left">
-            <span className="font-bold text-blue-700 text-lg">
+        <div className="my-8 md:my-12" key={q.question_id || index}>
+          <label className="block mb-2 text-left text-sm md:text-base">
+            <span className="font-bold text-blue-700 text-base md:text-lg">
               질문 {index + 1}:
             </span>
             <br /> {q.questionText}
@@ -150,10 +159,10 @@ const EvaluationPage = () => {
                 handleCommentChange(q.question_id, e.target.value)
               }
               disabled={isLoading}
-              className="w-full p-2 text-base mt-2 resize-y border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full p-2 text-sm md:text-base mt-2 resize-y border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-400"
             />
           ) : (
-            <div className="w-[85%] mx-auto">
+            <div className="w-full sm:w-[85%] mx-auto mt-2">
               <input
                 type="range"
                 min="1"
@@ -161,9 +170,9 @@ const EvaluationPage = () => {
                 value={scores[index] ?? 3}
                 onChange={(e) => handleSliderChange(index, e.target.value)}
                 disabled={isLoading}
-                className="custom-slider w-full appearance-none h-2 rounded bg-gradient-to-r from-blue-800 to-teal-200 outline-none mb-1"
+                className="custom-slider w-full appearance-none h-2 rounded bg-gradient-to-r from-blue-600 to-teal-300 outline-none mb-1"
               />
-              <div className="flex justify-between text-sm px-1 text-gray-600">
+              <div className="flex justify-between text-xs md:text-sm px-1 text-gray-600">
                 {[1, 2, 3, 4, 5].map((num) => (
                   <span key={num}>{num}</span>
                 ))}
@@ -173,17 +182,17 @@ const EvaluationPage = () => {
         </div>
       ))}
 
-      <div className="text-white text-sm font-semibold float-right">
+      {/* 버튼 영역 수정 */}
+      <div className="mt-8 flex flex-col sm:flex-row sm:justify-end gap-2 sm:gap-3">
         <button
-          className="bg-blue-500 hover:bg-blue-700 py-2 px-3 rounded transition disabled:opacity-50"
+          className="w-full sm:w-auto bg-blue-500 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold py-2 px-4 rounded transition disabled:opacity-50"
           onClick={handleSubmit}
           disabled={isLoading}
         >
           제출
         </button>
-        &nbsp;
         <button
-          className="bg-gray-400 hover:bg-gray-700 py-2 px-3 rounded transition disabled:opacity-50"
+          className="w-full sm:w-auto bg-gray-400 hover:bg-gray-600 text-white text-xs sm:text-sm font-semibold py-2 px-4 rounded transition disabled:opacity-50"
           onClick={handleReset}
           disabled={isLoading}
         >
@@ -192,8 +201,8 @@ const EvaluationPage = () => {
       </div>
 
       {isLoading && (
-        <div className="absolute top-0 left-0 w-full h-full bg-white/70 flex justify-center items-center z-50">
-          <div className="text-xl font-semibold text-blue-700 animate-pulse">
+        <div className="absolute top-0 left-0 w-full h-full bg-white/80 flex justify-center items-center z-50">
+          <div className="text-lg md:text-xl font-semibold text-blue-700 animate-pulse">
             제출 중입니다...
           </div>
         </div>
@@ -202,7 +211,7 @@ const EvaluationPage = () => {
       <AlertModal
         isOpen={alertModalOpen}
         message={msg}
-        onClose={() => handleClose(goTarget)}
+        onClose={() => handleClose(goTarget)} 
         type={type}
       />
     </div>

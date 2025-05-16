@@ -117,9 +117,9 @@ const ProfilePage = () => {
   const handleCustomDomainChange = (e) => setCustomEmailDomain(e.target.value);
 
   return (
-    <div className="max-w-6xl mx-auto p-8 bg-white shadow-md rounded-md mt-12">
-      <div className="flex justify-between items-center border-b pb-4 mb-8">
-        <h2 className="text-2xl font-semibold text-gray-700">내 프로필</h2>
+    <div className="max-w-6xl mx-auto p-4 md:p-8 bg-white shadow-md rounded-md mt-10 md:mt-12">
+      <div className="flex justify-between items-center border-b pb-4 mb-6 md:mb-8">
+        <h2 className="text-xl md:text-2xl font-semibold text-gray-700">내 프로필</h2>
       </div>
 
       {message && (
@@ -127,9 +127,8 @@ const ProfilePage = () => {
       )}
 
       {studentInfo ? (
-        <form className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          {/* 프로필 사진 + 이름 폼 */}
-          <div className="flex flex-col items-center gap-6">
+        <form className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
+          <div className="hidden md:flex flex-col items-center gap-6">
             <img
               src={
                 formData.userImgUrl
@@ -139,9 +138,7 @@ const ProfilePage = () => {
               alt="Profile"
               className="w-40 h-52 object-cover border rounded-md shadow-sm"
             />
-            {/* 이름 폼 */}
             <div className="w-full max-w-[10rem]">
-              {" "}
               <label className="block mb-1 text-sm font-semibold text-gray-700">
                 성명
               </label>
@@ -154,9 +151,19 @@ const ProfilePage = () => {
             </div>
           </div>
 
-          {/* 입력 폼 */}
-          <div className="col-span-2 grid grid-cols-2 gap-x-8 gap-y-0 ">
-            {/* 1행: 학번, 학과 */}
+          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6 md:gap-x-8 gap-y-4">
+            <div className="sm:col-span-2 md:hidden">
+                <label className="block mb-1 text-sm font-semibold text-gray-700">
+                    성명
+                </label>
+                <input
+                    type="text"
+                    value={formData.userName}
+                    readOnly
+                    className="w-full p-2 border rounded bg-gray-100 text-gray-700 text-sm"
+                />
+            </div>
+
             {[
               {
                 label: userRole === "STUDENT" ? "학번" : "ID",
@@ -176,8 +183,7 @@ const ProfilePage = () => {
                 />
               </div>
             ))}
-
-            {/* 2행: 생년월일, 전화번호 */}
+            
             <div>
               <label className="block mb-1 text-sm font-semibold text-gray-700">
                 생년월일
@@ -198,13 +204,13 @@ const ProfilePage = () => {
                 {["part1", "part2", "part3"].map((part, idx) => (
                   <div
                     key={part}
-                    className="flex items-center gap-1 flex-1 min-w-[6rem]" 
+                    className="flex items-center gap-1 flex-1 min-w-[calc(33.333%-0.5rem)] sm:min-w-[6rem]" 
                   >
                     <input
                       name={part}
                       maxLength={part === "part1" ? 3 : 4}
-                      className="w-full min-w-[4rem] p-2 border rounded text-center text-sm 
-        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                      className="w-full p-2 border rounded text-center text-sm 
+                      focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                       value={phoneParts[part]}
                       onChange={handlePhoneChange}
                     />
@@ -214,50 +220,54 @@ const ProfilePage = () => {
               </div>
             </div>
 
-{/* 3행: 이메일 (col-span-2로 넓게) */}
-<div className="col-span-2">
-  <label className="block mb-1 text-sm font-semibold text-gray-700">
-    이메일
-  </label>
-  <div className="flex flex-wrap items-center gap-2">
-    <input
-      className="flex-1 min-w-[6rem] max-w-[10rem] p-2 border rounded text-sm 
-      focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-      value={emailId}
-      onChange={handleEmailIdChange}
-    />
-    <span className="text-gray-600">@</span>
-    <input
-      className="flex-1 min-w-[6rem] max-w-[10rem] p-2 border rounded text-sm 
-      focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-      value={customEmailDomain}
-      onChange={handleCustomDomainChange}
-      placeholder="도메인"
-    />
-    <select
-      className="flex-1 min-w-[6rem] max-w-[10rem] p-2 border rounded text-sm 
-      focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-      value={emailDomain}
-      onChange={handleEmailDomainChange}
-    >
-      <option value="change">선택</option>
-      {emailDomainList.map((domain) => (
-        <option key={domain} value={domain}>
-          {domain}
-        </option>
-      ))}
-      <option value="custom">직접 입력</option>
-    </select>
-  </div>
-</div>
+            {/* 이메일 섹션 수정 */}
+            <div className="col-span-1 sm:col-span-2">
+              <label className="block mb-1 text-sm font-semibold text-gray-700">
+                이메일
+              </label>
+              {/* 모바일에서는 flex-wrap으로 자동 줄바꿈, sm 이상에서는 가로로 최대한 붙도록 */}
+              <div className="flex flex-wrap items-center gap-2">
+                <input
+                  aria-label="이메일 아이디"
+                  className="p-2 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition 
+                             flex-grow min-w-[80px] w-auto sm:flex-none sm:w-auto" // 너비 조정
+                  value={emailId}
+                  onChange={handleEmailIdChange}
+                  placeholder="이메일"
+                />
+                <span className="text-gray-600">@</span>
+                <input
+                  aria-label="이메일 도메인"
+                  className="p-2 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition 
+                             flex-grow min-w-[80px] w-auto sm:flex-none sm:w-auto" // 너비 조정
+                  value={customEmailDomain}
+                  onChange={handleCustomDomainChange}
+                  placeholder="도메인 입력"
+                />
+                <select
+                  aria-label="이메일 도메인 선택"
+                  className="p-2 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition 
+                             flex-grow min-w-[90px] w-auto sm:flex-none sm:w-auto" // 너비 조정
+                  value={emailDomain}
+                  onChange={handleEmailDomainChange}
+                >
+                  <option value="change">직접입력/선택</option>
+                  {emailDomainList.map((domain) => (
+                    <option key={domain} value={domain}>
+                      {domain}
+                    </option>
+                  ))}
+                  <option value="custom">직접 입력</option>
+                </select>
+              </div>
+            </div>
           </div>
 
-          {/* 수정 버튼 */}
-          <div className="col-span-3 flex justify-end mt-8">
+          <div className="col-span-1 md:col-span-3 flex justify-end mt-6 md:mt-8">
             <button
               type="button"
               onClick={handleSave}
-              className="px-8 py-2 bg-green-600 text-white font-semibold text-sm rounded hover:bg-green-700 transition"
+              className="px-6 sm:px-8 py-2 bg-green-600 text-white font-semibold text-sm rounded hover:bg-green-700 transition"
             >
               수정
             </button>
