@@ -61,15 +61,14 @@ const EnrollmentPage = () => {
         state: { message: "휴학 상태에서는 수강신청할 수 없습니다." },
       });
     }
-  }, []);
-  
+  }, [navigate]);
+
   useEffect(() => {
     const fetchSemesterInfo = async () => {
       try {
         const data = await getEnrollmentSemesterInfo();
         setSemesterInfo(data);
       } catch (error) {
-        console.error("수강신청 학기 정보 조회 실패:", error);
       }
     };
     fetchSemesterInfo();
@@ -94,31 +93,31 @@ const EnrollmentPage = () => {
           credits: creditsRes.data,
         });
       } catch (error) {
-        console.error("필터 데이터 불러오기 실패:", error);
       }
     };
     fetchFilters();
   }, []);
 
   useEffect(() => {
-    if (userId && filters.courseTypes.length > 0) {
+    if (userId && filters.courseTypes && filters.courseTypes.length > 0) {
       handleSearch(1);
     }
-  }, [userId, filters]);
+  }, [userId, filters, currentPage]);
 
   useEffect(() => {
     const fetchEnrolled = async () => {
+      if(!userId) return;
       try {
         const res = await getEnrolledCourses(userId);
         setTimetable(res.data);
       } catch (error) {
-        console.error("내 수강 목록 불러오기 실패:", error);
       }
     };
-    if (userId) fetchEnrolled();
+    fetchEnrolled();
   }, [userId]);
 
   const handleSearch = async (page = 1, size = 15) => {
+    if(!userId) return;
     try {
       const response = await searchCourses(userId, {
         courseName: searchQuery || null,
@@ -132,8 +131,7 @@ const EnrollmentPage = () => {
       setCourses(response.data);
       setCurrentPage(page);
     } catch (error) {
-      console.error("강의 검색 실패:", error);
-      dispatch(showModal("강의 검색 중 오류가 발생했습니다.", "error"));
+      dispatch(showModal({message:"강의 검색 중 오류가 발생했습니다.", type: "error"}));
     }
   };
 
@@ -184,21 +182,21 @@ const EnrollmentPage = () => {
   };
 
   const formatPeriodRange = (periodStr) => {
+    if(!periodStr) return "-";
     const parts = periodStr
       .split(",")
       .map(Number)
       .sort((a, b) => a - b);
 
     if (parts.length === 0) return "-";
-    if (parts.length === 1) return `${parts[0]}교시`;
-    return `${parts[0]} ~ ${parts[parts.length - 1]}교시`;
+    if (parts.length === 1) return `${parts[0]}`;
+    return `${parts[0]}~${parts[parts.length - 1]}`;
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-8 bg-white shadow-md rounded-md mt-10">
-      {/* 헤더 */}
-      <div className="flex justify-between items-center border-b pb-3 mb-6">
-        <h2 className="text-2xl font-semibold text-gray-700">
+    <div className="max-w-7xl mx-auto p-2 sm:p-4 md:p-8 bg-white shadow-md rounded-md mt-3 sm:mt-6 md:mt-10">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center border-b pb-1.5 sm:pb-2 md:pb-3 mb-2 sm:mb-3 md:mb-6">
+        <h2 className="text-base sm:text-lg md:text-2xl font-semibold text-gray-700 mb-1 text-center md:text-left sm:mb-0">
           {semesterInfo
             ? `${semesterInfo.year}년 ${
                 semesterInfo.term === "FIRST" ? "1" : "2"
@@ -206,18 +204,17 @@ const EnrollmentPage = () => {
             : "수강 신청"}
         </h2>
       </div>
-      {/* 안내 문구 */}
-      <div className="text-center text-gray-600 text-sm mb-6">
+      <div className="text-center text-gray-600 text-[9px] sm:text-xs md:text-sm mb-3 sm:mb-4 md:mb-6">
         ※ 필터를 선택한 후{" "}
         <span className="text-blue-600 font-semibold">검색 버튼</span>을
         눌러주세요.
       </div>
-      {/* 필터 + 검색창 통합 박스 */}
-      <div className="flex flex-wrap gap-4 items-center justify-center mb-10">
+
+      <div className="grid grid-cols-2 gap-1.5 sm:flex sm:flex-wrap sm:justify-center sm:gap-2 md:gap-4 mb-4 sm:mb-6 md:mb-10">
         <select
           value={filterCategory}
           onChange={(e) => setFilterCategory(e.target.value)}
-          className="px-3 py-2 w-48 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-1 text-[9px] sm:text-[10px] md:w-48 md:py-2 md:px-3 md:text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 md:focus:ring-2 focus:ring-blue-500"
         >
           <option value="전체">전체 구분</option>
           {filters.courseTypes.map((t) => (
@@ -230,7 +227,7 @@ const EnrollmentPage = () => {
         <select
           value={filterDay}
           onChange={(e) => setFilterDay(e.target.value)}
-          className="px-3 py-2 w-48 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-1 text-[9px] sm:text-[10px] md:w-48 md:py-2 md:px-3 md:text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 md:focus:ring-2 focus:ring-blue-500"
         >
           <option value="전체">전체 요일</option>
           {filters.classDays.map((d) => (
@@ -243,7 +240,7 @@ const EnrollmentPage = () => {
         <select
           value={filterTime}
           onChange={(e) => setFilterTime(e.target.value)}
-          className="px-3 py-2 w-48 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-1 text-[9px] sm:text-[10px] md:w-48 md:py-2 md:px-3 md:text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 md:focus:ring-2 focus:ring-blue-500"
         >
           <option value="전체">전체 시작교시</option>
           {filters.classTimes.map((t) => (
@@ -256,7 +253,7 @@ const EnrollmentPage = () => {
         <select
           value={filterCredit}
           onChange={(e) => setFilterCredit(e.target.value)}
-          className="px-3 py-2 w-48 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-1 text-[9px] sm:text-[10px] md:w-48 md:py-2 md:px-3 md:text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 md:focus:ring-2 focus:ring-blue-500"
         >
           <option value="전체">전체 학점</option>
           {filters.credits.map((c) => (
@@ -266,90 +263,101 @@ const EnrollmentPage = () => {
           ))}
         </select>
 
-        {/* 과목명 검색창 */}
         <input
           type="text"
           placeholder="과목명 검색"
-          className="px-3 py-2 w-64 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-1 text-[9px] sm:text-[10px] md:w-64 md:py-2 md:px-3 md:text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 md:focus:ring-2 focus:ring-blue-500"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-
-        {/* 검색 버튼 */}
         <button
           onClick={() => handleSearch(1)}
-          className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-semibold"
+          className="w-full p-1 text-[9px] sm:text-[10px] md:w-auto md:px-5 md:py-2 md:text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-semibold"
         >
-          검색 🔍
+          검색🔍
         </button>
       </div>
-      {/* 검색 결과 테이블 */}
-      <table className="min-w-full table-auto shadow-sm border border-gray-200 rounded-md text-sm">
-        <thead className="bg-gray-50 text-gray-600 uppercase text-sm leading-normal">
-          <tr className="text-center">
-            {[
-              "강의번호",
-              "과목명",
-              "구분",
-              "개설학과",
-              "강의학년",
-              "학점",
-              "강의요일",
-              "강의시간",
-              "강의실",
-              "담당교수",
-              "신청인원/정원",
-              "신청",
-            ].map((header) => (
-              <th key={header} className="py-3 px-2">
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="text-center text-gray-900">
-          {courses.dtoList.length === 0 ? (
+
+      <div className="w-full">
+        <table className="w-full table-auto shadow-sm border border-gray-200 rounded-md text-[7px] sm:text-[8px] md:text-sm">
+          <colgroup>
+            <col className="w-[12%] sm:w-[10%] md:w-[7%]"/>
+            <col className="w-auto min-w-[50px] sm:min-w-[60px] md:w-auto"/>
+            <col className="w-[10%] sm:w-[8%] md:w-[6%]" />
+            <col className="hidden md:table-cell md:w-[10%]" />
+            <col className="hidden sm:table-cell sm:w-[7%] md:w-[6%]" />
+            <col className="w-[8%] sm:w-[7%] md:w-[5%]" />
+            <col className="w-[10%] sm:w-[8%] md:w-[7%]" />
+            <col className="w-[12%] sm:w-[10%] md:w-[8%]" />
+            <col className="hidden md:table-cell md:w-[7%]" />
+            <col className="hidden sm:table-cell sm:w-[10%] md:w-[10%]" />
+            <col className="w-[18%] sm:w-[12%] md:w-[10%]" />
+            <col className="w-[10%] sm:w-[10%] md:w-[7%]" />
+          </colgroup>
+          <thead className="bg-gray-50 text-gray-500 text-[6px] sm:text-[7px] md:text-xs uppercase leading-tight">
             <tr>
-              <td colSpan="12" className="py-4 text-gray-400">
-                검색 결과가 없습니다.
-              </td>
+              <th className="py-0.5 px-px sm:p-0.5 md:py-3 md:px-2 whitespace-nowrap">강의번호</th>
+              <th className="py-0.5 px-px sm:p-0.5 md:py-3 md:px-2">과목명</th>
+              <th className="py-0.5 px-px sm:p-0.5 md:py-3 md:px-2">구분</th>
+              <th className="hidden md:table-cell py-0.5 px-px sm:p-0.5 md:py-3 md:px-2">개설학과</th>
+              <th className="hidden sm:table-cell py-0.5 px-px sm:p-0.5 md:py-3 md:px-2">학년</th>
+              <th className="py-0.5 px-px sm:p-0.5 md:py-3 md:px-2">학점</th>
+              <th className="py-0.5 px-px sm:p-0.5 md:py-3 md:px-2">요일</th>
+              <th className="py-0.5 px-px sm:p-0.5 md:py-3 md:px-2">시간</th>
+              <th className="hidden md:table-cell py-0.5 px-px sm:p-0.5 md:py-3 md:px-2">강의실</th>
+              <th className="hidden sm:table-cell py-0.5 px-px sm:p-0.5 md:py-3 md:px-2">담당교수</th>
+              <th className="py-0.5 px-px sm:p-0.5 md:py-3 md:px-2 whitespace-nowrap">신청/정원</th>
+              <th className="py-0.5 px-px sm:p-0.5 md:py-3 md:px-2">신청</th>
             </tr>
-          ) : (
-            courses.dtoList.map((course) => (
-              <tr key={course.강의번호} className="hover:bg-gray-50 border-t">
-                <td className="py-2 px-2">{course.강의번호}</td>
-                <td className="py-2 px-2">{course.강의명}</td>
-                <td className="py-2 px-2">{course.구분}</td>
-                <td className="py-2 px-2">{course.개설학과}</td>
-                <td className="py-2 px-2">{course.강의학년}학년</td>
-                <td className="py-2 px-2">{course.강의학점}학점</td>
-                <td className="py-2 px-2">{course.강의요일}요일</td>
-                <td className="py-2 px-2">
-                  {formatPeriodRange(course.강의시간)}
-                </td>
-                <td className="py-2 px-2">{course.강의실}</td>
-                <td className="py-2 px-2">{course.담당교수}</td>
-                <td className="py-2 px-2">{course.수강인원}</td>
-                <td className="py-2 px-2">
-                  <button
-                    onClick={() => handleEnroll(course)}
-                    className="bg-blue-400 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm"
-                  >
-                    신청 🛒
-                  </button>
+          </thead>
+          <tbody className="text-center text-gray-900">
+            {courses.dtoList.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="md:col-span-12 py-2 sm:py-3 md:py-4 text-gray-400 text-[7px] sm:text-[8px] md:text-xs">
+                  검색 결과가 없습니다.
                 </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ) : (
+              courses.dtoList.map((course) => (
+                <tr key={course.강의번호} className="hover:bg-gray-50 border-t">
+                  <td className="py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle break-all">{course.강의번호}</td>
+                  <td className="py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle text-left break-words">{course.강의명}</td>
+                  <td className="py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle break-all">{course.구분}</td>
+                  <td className="hidden md:table-cell py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle break-words">{course.개설학과}</td>
+                  <td className="hidden sm:table-cell py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle">{course.강의학년}학년</td>
+                  <td className="py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle">{course.강의학점}</td>
+                  <td className="py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle">{course.강의요일}</td>
+                  <td className="py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle whitespace-nowrap">{formatPeriodRange(course.강의시간)}</td>
+                  <td className="hidden md:table-cell py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle">{course.강의실}</td>
+                  <td className="hidden sm:table-cell py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle break-words">{course.담당교수}</td>
+                  <td className="py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle whitespace-nowrap">{course.수강인원}</td>
+                  <td className="py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle">
+                    <button
+                      onClick={() => handleEnroll(course)}
+                      className="bg-blue-400 hover:bg-blue-600 text-white px-1 py-0.5 text-[6px] sm:text-[7px] md:px-3 md:py-1 md:text-sm rounded"
+                    >
+                      신청
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="md:hidden mt-4 mb-4 mx-auto max-w-xs">
+        <FloatingPopup subjects={timetable} isMobileView={true} />
+      </div>
 
       <PageComponent
         currentPage={currentPage}
         totalPage={courses.totalPage}
         onPageChange={(page) => handleSearch(page)}
       />
-      <FloatingPopup subjects={timetable} />
+      <div className="hidden md:block mt-4">
+        <FloatingPopup subjects={timetable} />
+      </div>
     </div>
   );
 };
