@@ -53,7 +53,7 @@ const ProfessorEvaluationListPage = () => {
         </h2>
       </div>
 
-      <table className="w-full text-sm table-auto shadow-sm border border-gray-200 rounded-md">
+      <table className="w-full text-sm table-auto shadow-sm sm:border border-gray-200 rounded-md">
         <thead className="hidden sm:table-header-group bg-gray-50 text-gray-600 uppercase text-xs sm:text-sm leading-normal">
           <tr className="text-center border border-gray-200">
             <th className="py-3 px-4"> No.</th>
