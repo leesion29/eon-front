@@ -21,7 +21,7 @@ const NoticeListPage = () => {
     if (location.state?.keyword && location.state.keyword !== inputKeyword) {
         setInputKeyword(location.state.keyword);
     }
-  }, [location.state?.keyword]);
+  }, [location.state?.keyword, inputKeyword]); // inputKeyword를 의존성 배열에 추가하는 것이 좋을 수 있습니다.
 
   useEffect(() => {
     if (userId) {
@@ -74,7 +74,7 @@ const NoticeListPage = () => {
     setKeyword(inputKeyword);
     setCurrentPage(1);
   };
-  
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       handleSearch();
@@ -110,21 +110,18 @@ const NoticeListPage = () => {
 
       {message && <p className="text-red-500 text-center py-0.5 text-[9px] sm:text-[10px]">{message}</p>}
       <hr className="my-1 sm:my-1.5 md:my-2 lg:my-3"/>
-      
-      <div className="w-full overflow-x-auto"> {/* 모바일 스크롤 대비 */}
-        <table className="w-full border-collapse table-fixed"> 
+
+      <div className="w-full overflow-x-auto">
+        <table className="w-full border-collapse table-fixed">
           <colgroup>
-            {/* 기본(모바일) 너비를 매우 작게, sm 이상에서 PC 너비로 복원 */}
-            <col className="w-[12%] sm:w-[10%] md:w-[8%] lg:w-[6%]" />   
-            <col className="w-auto min-w-[100px] sm:min-w-0 sm:w-auto" /> {/* 제목: 모바일에선 최소너비, PC에선 auto */}
+            <col className="w-[12%] sm:w-[10%] md:w-[8%] lg:w-[6%]" />
+            <col className="w-auto min-w-[100px] sm:min-w-0 sm:w-auto" />
             <col className="w-[20%] sm:w-[18%] md:w-[15%] lg:w-[12%]" />
             <col className="w-[25%] sm:w-[22%] md:w-[20%] lg:w-[15%]" />
-            <col className="w-[15%] sm:w-[12%] md:w-[10%] lg:w-[8%]" /> 
+            <col className="w-[15%] sm:w-[12%] md:w-[10%] lg:w-[8%]" />
           </colgroup>
-          {/* 기본(모바일) 폰트 작게, sm 이상에서 PC 폰트로 복원 */}
           <thead className="bg-blue-800 text-white text-[8px] xs:text-[9px] sm:text-xs md:text-sm">
             <tr>
-              {/* 기본(모바일) 패딩/폰트 작게, sm 이상에서 PC 스타일로 복원 */}
               <th className="py-0.5 px-px sm:py-1 sm:px-1.5 md:py-1.5 md:px-2 text-center font-normal sm:font-medium whitespace-nowrap">번호</th>
               <th className="py-0.5 px-px sm:py-1 sm:px-1.5 md:py-1.5 md:px-2 text-center font-normal sm:font-medium whitespace-nowrap">제목</th>
               <th className="py-0.5 px-px sm:py-1 sm:px-1.5 md:py-1.5 md:px-2 text-center font-normal sm:font-medium whitespace-nowrap">작성자</th>
@@ -132,7 +129,6 @@ const NoticeListPage = () => {
               <th className="py-0.5 px-px sm:py-1 sm:px-1.5 md:py-1.5 md:px-2 text-center font-normal sm:font-medium whitespace-nowrap">조회수</th>
             </tr>
           </thead>
-          {/* 기본(모바일) 폰트 작게, sm 이상에서 PC 폰트로 복원 */}
           <tbody className="text-[8px] xs:text-[9px] sm:text-xs md:text-sm">
             {(pinned.length > 0 || currentItem.length > 0) ? (
               [...pinned, ...currentItem].map((notice, i) => {
@@ -141,7 +137,6 @@ const NoticeListPage = () => {
 
                 return (
                   <tr key={notice.noticeId || i} className={`${isPinned ? "bg-blue-50 hover:bg-blue-100" : "hover:bg-gray-50"} border-b border-gray-300`}>
-                    {/* 기본(모바일) 패딩 작게, sm 이상에서 PC 패딩으로 복원 */}
                     <td className={`py-0.5 px-px sm:py-1 sm:px-1.5 md:py-1.5 md:px-2 text-center align-middle ${isPinned ? "font-semibold text-blue-600" : ""}`}>{displayItemNumber}</td>
                     <td className={`py-0.5 px-px sm:py-1 sm:px-1.5 md:py-2 md:px-2 text-left align-middle break-words ${isPinned ? "font-bold" : ""}`}>
                       <Link
@@ -182,7 +177,7 @@ const NoticeListPage = () => {
           />
         </div>
       )}
-      
+
       {userRole === "ADMIN" && (
         <div className="flex justify-end mt-1.5 sm:mt-2 md:mt-3">
           <Link

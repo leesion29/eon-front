@@ -7,7 +7,6 @@ import PageComponent from "../../components/PageComponent";
 import { getMyClasses } from "../../api/professorClassApi";
 import { findProfessorLectureList } from "../../api/evaluationAPI";
 
-/* 강의 평가 조회 페이지(list) - 평가 내용을 볼 과목의 리스트를 조회 */
 const ProfessorEvaluationClassListPage = () => {
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.auth.userId);
@@ -21,7 +20,6 @@ const ProfessorEvaluationClassListPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
 
-  // 데이터를 보기 좋게 정렬
   const sortResData = (classesData) => {
     let data = classesData.dtoList;
 
@@ -78,63 +76,80 @@ const ProfessorEvaluationClassListPage = () => {
   }, [userId]);
 
   return (
-    <div className="max-w-7xl mx-auto p-8 bg-white shadow-md rounded-md mt-10">
-      <div className="flex justify-between items-center border-b pb-3 mb-6">
-        <h2 className="text-2xl font-semibold text-gray-700">강의 평가 조회</h2>
+    <div className="max-w-7xl mx-auto p-3 sm:p-6 md:p-8 bg-white shadow-md rounded-md mt-4 sm:mt-6 md:mt-10">
+      <div className="border-b pb-3 mb-4 sm:mb-6">
+        <h2 className="text-xl sm:text-2xl font-semibold text-gray-700">
+          강의 평가 조회
+        </h2>
       </div>
 
-      <table className="min-w-full table-auto shadow-sm border border-gray-200 rounded-md">
-        <thead className="bg-gray-50 text-gray-600 uppercase text-sm leading-normal">
-          <tr>
-            <th className="py-3 px-4">번호</th>
-            <th className="py-3 px-4">과목명</th>
-            <th className="py-3 px-4">구분</th>
-            <th className="py-3 px-4">학년</th>
-            <th className="py-3 px-4">학기</th>
-            <th className="py-3 px-4">상태</th>
-          </tr>
-        </thead>
-        <tbody className="text-gray-700 text-sm text-center">
-          {classes.dtoList.length === 0 ? (
+      <div className="w-full">
+        <table className="w-full border-collapse sm:table-auto sm:shadow-sm sm:border sm:border-gray-200 sm:rounded-md">
+          <thead className="hidden sm:table-header-group bg-gray-50 text-gray-600 uppercase text-xs leading-normal">
             <tr>
-              <td colSpan={9} className="py-6 text-gray-400">
-                해당하는 데이터가 없습니다.
-              </td>
+              <th className="py-3 px-4 text-center">번호</th>
+              <th className="py-3 px-4 text-center">과목명</th>
+              <th className="py-3 px-4 text-center">구분</th>
+              <th className="py-3 px-4 text-center">학년</th>
+              <th className="py-3 px-4 text-center">학기</th>
+              <th className="py-3 px-4 text-center">상태</th>
             </tr>
-          ) : (
-            classes.dtoList.map((c) => (
-              <tr
-                key={c.classId}
-                className="hover:bg-gray-100 border-b cursor-pointer"
-                onClick={() => {
-                  navigate("/main/professor/evaluationlist", {
-                    state: { courseName: c.courseName, classId: c.classId },
-                  });
-                }}
-              >
-                <td className="py-3 px-4">{c.classId}</td>
-                <td className="py-3 px-4">{c.courseName}</td>
-                <td className="py-3 px-4">
-                  {c.courseType === "MAJOR" ? "전공" : "교양"}
-                </td>
-                <td className="py-3 px-4">{c.courseYear}학년</td>
-                <td className="py-3 px-4">{c.semester}</td>
-                <td
-                  className={
-                    status?.some((e) => e.classId === c.classId)
-                      ? "py-2 px-4 text-gray-400"
-                      : "py-2 px-4 text-red-400"
-                  }
-                >
-                  {status?.some((e) => e.classId === c.classId)
-                    ? "기재됨"
-                    : "미기재"}
+          </thead>
+          <tbody className="block sm:table-row-group text-gray-700">
+            {classes.dtoList.length === 0 ? (
+              <tr className="block sm:table-row">
+                <td className="block sm:table-cell sm:col-span-6 py-6 text-center text-gray-400 text-xs sm:text-sm">
+                  해당하는 데이터가 없습니다.
                 </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ) : (
+              classes.dtoList.map((c) => (
+                <tr
+                  key={c.classId}
+                  className="block sm:table-row mb-4 sm:mb-0 p-3 sm:p-0 border sm:border-b sm:border-solid sm:border-gray-200 rounded-lg sm:rounded-none shadow-md sm:shadow-none hover:bg-gray-50 sm:hover:bg-gray-100 cursor-pointer"
+                  onClick={() => {
+                    navigate("/main/professor/evaluationlist", {
+                      state: { courseName: c.courseName, classId: c.classId },
+                    });
+                  }}
+                >
+                    <td data-label="번호" className="hidden text-xs text-gray-600 pt-0.5 pb-0.5 sm:table-cell sm:py-3 sm:px-4 sm:text-center sm:text-sm sm:text-gray-700">
+                    <span className="font-medium sm:hidden mr-2"></span>
+                    {c.classId}
+                  </td>
+                  <td data-label="과목명" className="block text-xs text-gray-600 pt-1 pb-0.5 sm:table-cell sm:py-3 sm:px-4 sm:text-center sm:text-sm sm:font-normal sm:text-gray-700">
+                    <span className="font-bold sm:hidden mr-2 text-blue-800 text-lg ">{c.classId}</span><span className="sm:font-normal font-semibold text-sm">{c.courseName}</span>
+                    <hr className="sm:hidden"/>
+                  </td>
+                  <td data-label="구분" className="block text-xs text-gray-600 pt-1 pb-0.5 sm:table-cell sm:py-3 sm:px-4 sm:text-center sm:text-sm sm:text-gray-700">
+                    <span className="font-medium sm:hidden mr-2">구분:</span>
+                    {c.courseType === "MAJOR" ? "전공" : "교양"}
+                  </td>
+                  <td data-label="학년" className="block text-xs text-gray-600 pt-0.5 pb-0.5 sm:table-cell sm:py-3 sm:px-4 sm:text-center sm:text-sm sm:text-gray-700">
+                    <span className="font-medium sm:hidden mr-2">학년:</span>
+                    {c.courseYear}학년
+                  </td>
+                  <td data-label="학기" className="block text-xs text-gray-600 pt-0.5 pb-0.5 sm:table-cell sm:py-3 sm:px-4 sm:text-center sm:text-sm sm:text-gray-700">
+                    <span className="font-medium sm:hidden mr-2">학기:</span>
+                    {c.semester}
+                  </td>
+                  <td data-label="상태" className={`block text-xs pt-0.5 pb-0.5 sm:table-cell sm:py-3 sm:px-4 sm:text-center sm:text-sm ${
+                      status?.some((e) => e.classId === c.classId)
+                        ? "text-gray-400" // 모바일/웹 모두 "기재됨"은 회색(gray-500)
+                        : "text-red-500 font-semibold sm:font-normal sm:text-red-500" // "미기재"는 모바일/웹 모두 빨간색, 웹에서는 font-normal
+                    }`}
+                  >
+                    <span className="font-medium sm:hidden mr-2 text-gray-600">상태:</span>
+                    {status?.some((e) => e.classId === c.classId)
+                      ? "기재됨"
+                      : "미기재"}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <PageComponent
         currentPage={classes.current}
