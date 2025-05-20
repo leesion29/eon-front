@@ -12,19 +12,16 @@ import AdminUserMultiUploadPage from "./AdminUserMultiUploadPage";
 const AdminUserListPage = () => {
   const dispatch = useDispatch();
   const { openConfirm, ConfirmModalComponent } = useConfirmModal();
-
   const [users, setUsers] = useState({
     dtoList: [],
     totalPage: 0,
     current: 1,
     totalCount: 0,
   });
-
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortField, setSortField] = useState("userId");
   const [sortDir, setSortDir] = useState("asc");
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editUser, setEditUser] = useState(null);
   const [hoveredUser, setHoveredUser] = useState(null);
@@ -85,11 +82,23 @@ const AdminUserListPage = () => {
   const tableHeaders = [
     { label: "학번/ID", field: "userId", desktopAlignment: "sm:text-center" },
     { label: "이름", field: "userName", desktopAlignment: "sm:text-left" },
-    { label: "생년월일", field: "userBirth", desktopAlignment: "sm:text-center" },
+    {
+      label: "생년월일",
+      field: "userBirth",
+      desktopAlignment: "sm:text-center",
+    },
     { label: "이메일", field: "userEmail", desktopAlignment: "sm:text-left" },
-    { label: "전화번호", field: "userPhone", desktopAlignment: "sm:text-center" },
+    {
+      label: "전화번호",
+      field: "userPhone",
+      desktopAlignment: "sm:text-center",
+    },
     { label: "구분", field: "userRole", desktopAlignment: "sm:text-center" },
-    { label: "학과", field: "departmentName", desktopAlignment: "sm:text-left" },
+    {
+      label: "학과",
+      field: "departmentName",
+      desktopAlignment: "sm:text-left",
+    },
     { label: "관리", field: "actions", desktopAlignment: "sm:text-center" },
   ];
 
@@ -115,10 +124,12 @@ const AdminUserListPage = () => {
   };
 
   return (
-    <div className="w-full mt-4 sm:mt-6 md:mt-10"> {/* 이 div는 전체 너비를 차지하고, 상단 마진만 가짐 */}
-      <div className="max-w-sm sm:max-w-5xl mx-auto px-2 py-3 sm:px-4 sm:py-6 md:px-6 md:py-8 bg-white shadow-md rounded-md"> {/* 실제 콘텐츠를 담는 div, 중앙 정렬 및 최대 너비 제한 */}
+    <div className="w-4/5 mx-auto sm:w-full mt-4 sm:mt-6 md:mt-10">
+      <div className="w-full sm:max-w-5xl sm:mx-auto px-2 py-3 sm:px-4 sm:py-6 md:px-6 md:py-8 bg-white shadow-md rounded-md mb-8">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b pb-3 mb-4 sm:mb-6">
-          <h2 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-2 sm:mb-0">사용자 관리</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-2 sm:mb-0">
+            사용자 관리
+          </h2>
           <div className="flex flex-col sm:flex-row gap-2 mt-2 sm:mt-0">
             <button
               onClick={() => setIsModalOpen(true)}
@@ -152,19 +163,29 @@ const AdminUserListPage = () => {
                 {tableHeaders.map(({ label, field, desktopAlignment }) => (
                   <th
                     key={label}
-                    className={`py-3 px-4 cursor-pointer border-b ${ field !== 'actions' ? 'text-left' : 'text-center'} ${desktopAlignment} `}
-                    onClick={() => field !== 'actions' && field !== null && handleSort(field)}
+                    className={`py-3 px-4 cursor-pointer border-b ${
+                      field !== "actions" ? "text-left" : "text-center"
+                    } ${desktopAlignment} `}
+                    onClick={() =>
+                      field !== "actions" && field !== null && handleSort(field)
+                    }
                   >
                     {label}
-                    {field !== 'actions' && field !== null && sortField === field && (sortDir === "asc" ? " ▲" : " ▼")}
+                    {field !== "actions" &&
+                      field !== null &&
+                      sortField === field &&
+                      (sortDir === "asc" ? " ▲" : " ▼")}
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody className="block sm:table-row-group text-gray-700 text-sm">
               {users.dtoList.length === 0 ? (
-                <tr className="block sm:table-row w-full">
-                  <td colSpan={tableHeaders.length} className="block sm:table-cell py-6 text-center text-gray-400 text-xs sm:text-sm w-full">
+                <tr className="block sm:table-row w-full"> {/* sm:table-row ensures it doesn't break table structure on desktop if empty */}
+                  <td
+                    colSpan={tableHeaders.length}
+                    className="block sm:table-cell py-6 text-center text-gray-400 text-xs sm:text-sm w-full"
+                  >
                     사용자 정보가 없습니다.
                   </td>
                 </tr>
@@ -172,24 +193,39 @@ const AdminUserListPage = () => {
                 users.dtoList.map((user) => (
                   <tr
                     key={user.userId}
-                    className="block w-full sm:table-row mb-3 sm:mb-0 px-3 py-2 sm:p-0 border border-gray-200 rounded-lg sm:rounded-none shadow-md sm:shadow-none hover:bg-gray-50 sm:hover:bg-gray-100 sm:border-b"
+                    className="block w-full mb-3 border border-gray-200 rounded-lg shadow-md px-3 py-2 hover:bg-gray-50 
+                               sm:table-row sm:shadow-none sm:rounded-none sm:border-0 sm:border-b sm:border-gray-200 sm:p-0 sm:hover:bg-gray-100"
                   >
                     {tableHeaders.map((header) => (
                       <td
                         key={`${user.userId}-${header.field}`}
                         data-label={header.label}
                         className={`
-                          ${header.field === "userName" ? "block order-first sm:order-none font-bold text-blue-700 pb-1 mb-1 border-b sm:border-b-0 sm:pb-0 sm:mb-0 text-base sm:text-sm" : "block pt-0.5 pb-0.5 text-xs sm:text-sm"}
-                          sm:table-cell sm:h-12 sm:py-2 sm:px-4 sm:align-middle ${header.desktopAlignment}
+                          ${
+                            header.field === "userName"
+                              ? "block order-first sm:order-none font-bold text-blue-700 pb-1 mb-1 border-b sm:border-b-0 sm:pb-0 sm:mb-0 text-base sm:text-sm"
+                              : "block pt-0.5 pb-0.5 text-xs sm:text-sm"
+                          }
+                          sm:table-cell sm:h-12 sm:py-2 sm:px-4 sm:align-middle 
+                          ${header.desktopAlignment}
                         `}
-                        onMouseEnter={() => header.field === "userName" && setHoveredUser(user)}
-                        onMouseLeave={() => header.field === "userName" && setHoveredUser(null)}
+                        onMouseEnter={() =>
+                          header.field === "userName" && setHoveredUser(user)
+                        }
+                        onMouseLeave={() =>
+                          header.field === "userName" && setHoveredUser(null)
+                        }
                       >
-                        {header.field !== "userName" && header.field !== "actions" && (
-                          <span className="font-medium sm:hidden mr-1 text-gray-500">{header.label}: </span>
-                        )}
+                        {header.field !== "userName" &&
+                          header.field !== "actions" && (
+                            <span className="font-medium sm:hidden mr-1 text-gray-500">
+                              {header.label}:{" "}
+                            </span>
+                          )}
                         {header.field !== "actions" ? (
-                          <span className="break-words">{renderUserValue(user, header)}</span>
+                          <span className="break-words">
+                            {renderUserValue(user, header)}
+                          </span>
                         ) : (
                           <div className="flex flex-row items-center justify-start space-x-1 sm:justify-center sm:space-x-1 pt-0.5 sm:pt-0">
                             <button
@@ -206,19 +242,20 @@ const AdminUserListPage = () => {
                             </button>
                           </div>
                         )}
-                        {header.field === "userName" && hoveredUser?.userId === user.userId && (
-                          <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 w-24 h-24 bg-white border-2 border-blue-200 rounded-md shadow-lg z-20 overflow-hidden">
-                            <img
-                              src={
-                                hoveredUser.userImgUrl
-                                  ? `https://www.eonuniversity.co.kr${hoveredUser.userImgUrl}`
-                                  : "/images/noImage.jpg"
-                              }
-                              alt="프로필"
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        )}
+                        {header.field === "userName" &&
+                          hoveredUser?.userId === user.userId && (
+                            <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 w-24 h-24 bg-white border-2 border-blue-200 rounded-md shadow-lg z-20 overflow-hidden">
+                              <img
+                                src={
+                                  hoveredUser.userImgUrl
+                                    ? `https://www.eonuniversity.co.kr${hoveredUser.userImgUrl}`
+                                    : "/images/noImage.jpg"
+                                }
+                                alt="프로필"
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          )}
                       </td>
                     ))}
                   </tr>
@@ -235,13 +272,22 @@ const AdminUserListPage = () => {
         />
 
         <BaseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-          <AdminUserCreatePage onSuccess={() => { fetchUsers(1); setIsModalOpen(false);}} onClose={() => setIsModalOpen(false)} />
+          <AdminUserCreatePage
+            onSuccess={() => {
+              fetchUsers(1);
+              setIsModalOpen(false);
+            }}
+            onClose={() => setIsModalOpen(false)}
+          />
         </BaseModal>
 
         <BaseModal isOpen={!!editUser} onClose={() => setEditUser(null)}>
           <AdminUserEditPage
             user={editUser}
-            onSuccess={() => { fetchUsers(users.current); setEditUser(null);}}
+            onSuccess={() => {
+              fetchUsers(users.current);
+              setEditUser(null);
+            }}
             onClose={() => setEditUser(null)}
           />
         </BaseModal>
@@ -251,7 +297,10 @@ const AdminUserListPage = () => {
           onClose={() => setIsMultiUploadModalOpen(false)}
         >
           <AdminUserMultiUploadPage
-            onSuccess={() => { fetchUsers(1); setIsMultiUploadModalOpen(false);}}
+            onSuccess={() => {
+              fetchUsers(1);
+              setIsMultiUploadModalOpen(false);
+            }}
             onClose={() => setIsMultiUploadModalOpen(false)}
           />
         </BaseModal>
@@ -261,5 +310,4 @@ const AdminUserListPage = () => {
     </div>
   );
 };
-
 export default AdminUserListPage;
