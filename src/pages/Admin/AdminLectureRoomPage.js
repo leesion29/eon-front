@@ -152,7 +152,7 @@ const AdminLectureRoomPage = () => {
   return (
     <div className="max-w-7xl mx-auto p-8 bg-white shadow-md rounded-md mt-10">
       <div className="flex justify-between items-center border-b pb-3 mb-6">
-        <h2 className="text-2xl font-semibold text-gray-700">
+        <h2 className="sm:text-2xl font-semibold text-gray-700">
           강의실 사용 현황
         </h2>
         <button

@@ -87,7 +87,7 @@ const AdminUserListPage = () => {
       field: "userBirth",
       desktopAlignment: "sm:text-center",
     },
-    { label: "이메일", field: "userEmail", desktopAlignment: "sm:text-left" },
+    { label: "이메일", field: "userEmail", desktopAlignment: "sm:text-center" },
     {
       label: "전화번호",
       field: "userPhone",
@@ -97,7 +97,7 @@ const AdminUserListPage = () => {
     {
       label: "학과",
       field: "departmentName",
-      desktopAlignment: "sm:text-left",
+      desktopAlignment: "sm:text-center",
     },
     { label: "관리", field: "actions", desktopAlignment: "sm:text-center" },
   ];
@@ -124,7 +124,7 @@ const AdminUserListPage = () => {
   };
 
   return (
-    <div className="w-4/5 mx-auto sm:w-full mt-4 sm:mt-6 md:mt-10">
+    <div className="w-3/5 mx-auto sm:w-full mt-4 sm:mt-6 md:mt-10">
       <div className="w-full sm:max-w-5xl sm:mx-auto px-2 py-3 sm:px-4 sm:py-6 md:px-6 md:py-8 bg-white shadow-md rounded-md mb-8">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b pb-3 mb-4 sm:mb-6">
           <h2 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-2 sm:mb-0">
@@ -158,7 +158,7 @@ const AdminUserListPage = () => {
 
         <div className="overflow-x-auto">
           <table className="w-full sm:min-w-full sm:table-auto">
-            <thead className="hidden sm:table-header-group bg-gray-50 text-gray-600 uppercase text-xs leading-normal">
+            <thead className="hidden sm:table-header-group bg-gray-50 text-gray-600 uppercase text-xs leading-normal border">
               <tr>
                 {tableHeaders.map(({ label, field, desktopAlignment }) => (
                   <th
@@ -179,9 +179,11 @@ const AdminUserListPage = () => {
                 ))}
               </tr>
             </thead>
-            <tbody className="block sm:table-row-group text-gray-700 text-sm">
+            <tbody className="block sm:table-row-group text-gray-700 text-sm border">
               {users.dtoList.length === 0 ? (
-                <tr className="block sm:table-row w-full"> {/* sm:table-row ensures it doesn't break table structure on desktop if empty */}
+                <tr className="block sm:table-row w-full">
+                  {" "}
+                  {/* sm:table-row ensures it doesn't break table structure on desktop if empty */}
                   <td
                     colSpan={tableHeaders.length}
                     className="block sm:table-cell py-6 text-center text-gray-400 text-xs sm:text-sm w-full"
@@ -203,7 +205,7 @@ const AdminUserListPage = () => {
                         className={`
                           ${
                             header.field === "userName"
-                              ? "block order-first sm:order-none font-bold text-blue-700 pb-1 mb-1 border-b sm:border-b-0 sm:pb-0 sm:mb-0 text-base sm:text-sm"
+                              ? "block order-first sm:order-none font-bold text-blue-700 sm:text-gray-700 pb-1 mb-1 border-b sm:border-b-0 sm:pb-2 sm:mb-0 text-base sm:text-sm sm:font-normal"
                               : "block pt-0.5 pb-0.5 text-xs sm:text-sm"
                           }
                           sm:table-cell sm:h-12 sm:py-2 sm:px-4 sm:align-middle 
