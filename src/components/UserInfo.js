@@ -90,15 +90,15 @@ const UserInfo = () => {
   }, [userInfo]);
 
   if (isLoading || !processedUserInfo) {
-    return <div className="text-gray-400 text-sm">불러오는 중...</div>;
+    return <div className="text-gray-400 text-xs sm:text-sm">불러오는 중...</div>;
   }
 
   return (
-    <div className="text-sm text-gray-600 flex flex-wrap items-center">
+    <div className="text-xs sm:text-sm text-gray-600 flex flex-wrap items-center">
       <img
         src={`https://www.eonuniversity.co.kr${userInfo.userImgUrl}`}
         alt="프로필 이미지"
-        className="w-[45px] h-[45px] object-cover rounded-full mr-4 border border-gray-400"
+        className="w-[45px] h-[45px] object-cover rounded-full mr-3 sm:mr-4 border border-gray-400"
       />
 
       <span>
@@ -107,18 +107,18 @@ const UserInfo = () => {
       </span>
 
       {(userRole === "STUDENT" || userRole === "PROFESSOR") && (
-        <>
-          <span className="mx-3 text-gray-400">|</span>
+        <span className="hidden sm:inline"> {/* 이 span 전체를 모바일에서 숨기고, sm 이상에서 표시 */}
+          <span className="mx-2 sm:mx-3 text-gray-400">|</span>
           <span>
             <span className="font-semibold">학과:</span>{" "}
             {processedUserInfo.departmentName || "N/A"}
           </span>
-        </>
+        </span>
       )}
 
       {userRole === "STUDENT" && (
-        <>
-          <span className="mx-3 text-gray-400">|</span>
+        <span> {/* 이 부분은 학생일 경우 항상 렌더링 (모바일/데스크톱 동일) */}
+          <span className="mx-2 sm:mx-3 text-gray-400">|</span>
           <span>
             <span className="font-semibold">학적상태:</span>{" "}
             {isLoading
@@ -131,7 +131,7 @@ const UserInfo = () => {
               ? `재학 (${statusInfo.studentYear}학년)`
               : "정보 없음"}
           </span>
-        </>
+        </span>
       )}
     </div>
   );

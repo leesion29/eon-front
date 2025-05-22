@@ -1,9 +1,9 @@
-import React, { useCallback, useState, useEffect } from "react"; // useEffect 추가
+import React, { useCallback, useState, useEffect } from "react"; 
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../slices/authSlice";
-import UserInfo from "../components/UserInfo"; // UserInfo 컴포넌트가 있다고 가정
-import { motion, AnimatePresence } from "framer-motion"; // AnimatePresence 추가
+import UserInfo from "../components/UserInfo"; 
+import { motion, AnimatePresence } from "framer-motion"; 
 
 // 아이콘 추가 (예시: Heroicons)
 const MenuIcon = () => (
@@ -57,11 +57,10 @@ const BasicLayout = () => {
     setIsMobileMenuOpen(false); // 로그아웃 시 모바일 메뉴 닫기
   }, [dispatch, navigate]);
 
-  // 화면 크기 변경 감지 (선택적: 더 정교한 제어를 위해)
+  // 화면 크기 변경 감지
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768 && isMobileMenuOpen) {
-        // md 브레이크포인트 이상에서 모바일 메뉴가 열려있으면 닫음
         setIsMobileMenuOpen(false);
       }
     };
@@ -135,14 +134,13 @@ const BasicLayout = () => {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className="fixed inset-0 z-40 bg-gradient-to-b from-blue-900 to-blue-800 text-white p-6 pt-20 flex flex-col space-y-6 overflow-y-auto md:hidden"
           >
-            {/* 모바일 메뉴 상단에 UserInfo 및 로그아웃/로그인 버튼 추가 */}
+            {/* 모바일 메뉴 상단 */}
             <div className="mb-4 p-4 bg-blue-200 rounded-lg">
               <UserInfo isMobile={true} />{" "}
-              {/* isMobile 같은 prop으로 스타일 조정 가능 */}
               {userId ? (
                 <button
                   onClick={handleLogout}
-                  className="w-full mt-3 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold py-2.5 px-5 rounded-lg transition duration-300"
+                  className="w-full mt-3 bg-blue-700 hover:bg-blue-900 text-white text-sm font-semibold py-2.5 px-5 rounded-lg transition duration-300"
                 >
                   로그아웃
                 </button>
@@ -150,7 +148,7 @@ const BasicLayout = () => {
                 <Link
                   to="/member/login"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block w-full text-center mt-3 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold py-2.5 px-5 rounded-lg transition duration-300"
+                  className="block w-full text-center mt-3 bg-blue-700 hover:bg-blue-900 text-white text-sm font-semibold py-2.5 px-5 rounded-lg transition duration-300"
                 >
                   로그인
                 </Link>
@@ -463,9 +461,7 @@ const BasicLayout = () => {
   );
 };
 
-// SectionTitle, SimpleLink, ToggleMenu 컴포넌트는 기존 코드를 사용하되,
-// 필요에 따라 isMobile prop을 받아 스타일을 분기할 수 있습니다.
-// 예시: ToggleMenu에 isMobile prop 전달하여 모바일에서 다르게 보이도록 처리
+
 const SectionTitle = ({ title }) => (
   <div className="text-gray-300 text-xs uppercase font-semibold tracking-wide mb-2">
     {title}
@@ -474,7 +470,6 @@ const SectionTitle = ({ title }) => (
 );
 
 const SimpleLink = ({ to, label, currentPath, onClick }) => {
-  // onClick 추가
   const isActive = currentPath.startsWith(to);
   return (
     <Link
@@ -497,8 +492,8 @@ const ToggleMenu = ({
   currentPath,
   hoveredMenu,
   setHoveredMenu,
-  isMobile, // isMobile prop 추가
-  onLinkClick, // 링크 클릭 시 메뉴 닫기용 콜백
+  isMobile,
+  onLinkClick,
 }) => {
   const isCurrentPathInLinks = links.some((link) =>
     currentPath.startsWith(link.to)
@@ -507,7 +502,7 @@ const ToggleMenu = ({
   const [mobileToggleOpen, setMobileToggleOpen] =
     useState(isCurrentPathInLinks);
 
-  const isHovered = !isMobile && hoveredMenu === title; // 데스크탑에서만 호버 적용
+  const isHovered = !isMobile && hoveredMenu === title; 
   const isOpen = isMobile
     ? mobileToggleOpen
     : isCurrentPathInLinks || isHovered;
@@ -521,15 +516,15 @@ const ToggleMenu = ({
   return (
     <div
       className="relative"
-      onMouseEnter={() => !isMobile && setHoveredMenu(title)} // 데스크탑에서만 호버
-      onMouseLeave={() => !isMobile && setHoveredMenu("")} // 데스크탑에서만 호버
+      onMouseEnter={() => !isMobile && setHoveredMenu(title)} 
+      onMouseLeave={() => !isMobile && setHoveredMenu("")} 
     >
       <button
-        onClick={handleToggle} // 모바일에서는 클릭으로 토글
+        onClick={handleToggle} 
         className={`w-full text-left flex justify-between items-center px-3 py-2.5 sm:px-4 sm:py-2 rounded-md transition text-sm sm:text-base ${
-          isOpen && !isMobile // 데스크탑에서 열렸을 때 (액티브 상태 강조)
+          isOpen && !isMobile 
             ? "bg-blue-700 text-white shadow-inner"
-            : isMobile && isOpen // 모바일에서 열렸을 때
+            : isMobile && isOpen 
             ? "bg-blue-700 text-white"
             : "hover:bg-blue-600 hover:text-white transition-colors duration-300"
         }`}
@@ -545,7 +540,7 @@ const ToggleMenu = ({
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className={`pl-4 sm:pl-6 overflow-hidden`} // mt-2 제거하고 space-y로 간격 제어
+            className={`pl-4 sm:pl-6 overflow-hidden`} 
           >
             <div className="pt-2 space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
               {" "}
@@ -556,7 +551,7 @@ const ToggleMenu = ({
                   <Link
                     key={idx}
                     to={link.to}
-                    onClick={onLinkClick} // 링크 클릭 시 모바일 메뉴 닫기
+                    onClick={onLinkClick} 
                     className={`block px-2 py-1.5 sm:px-2 sm:py-1 rounded-md transition ${
                       active
                         ? "bg-blue-600 text-white shadow-inner border-l-4 border-blue-300"

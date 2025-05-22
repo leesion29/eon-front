@@ -5,7 +5,8 @@ import {
   uploadProfileImage,
 } from "../../api/adminUserApi";
 import { useDispatch } from "react-redux";
-import { showModal } from "../../slices/modalSlice"; // Redux 액션
+import { showModal } from "../../slices/modalSlice";
+// Redux 액션
 
 const initialForm = {
   userId: "",
@@ -18,7 +19,6 @@ const initialForm = {
   departmentId: null,
   userImgUrl: "",
 };
-
 const AdminUserCreatePage = ({ onSuccess }) => {
   const [form, setForm] = useState(initialForm);
   const [departments, setDepartments] = useState([]);
@@ -35,13 +35,11 @@ const AdminUserCreatePage = ({ onSuccess }) => {
   const [userIdMessage, setUserIdMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const fileInputRef = useRef(null);
-
   useEffect(() => {
     getDepartments()
       .then((res) => setDepartments(res.data))
       .catch(() => setDepartments([]));
   }, []);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => {
@@ -53,7 +51,8 @@ const AdminUserCreatePage = ({ onSuccess }) => {
             : "❌ 숫자 9자리여야 합니다."
         );
       }
-      if (name === "userBirth" && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      if (name === "userBirth" && /^\d{4}-\d{2}-\d{2}$/.test(value)) 
+{
         const formatted =
           value.slice(2, 4) + value.slice(5, 7) + value.slice(8, 10);
         updated.userPassword = `${formatted}!`;
@@ -70,7 +69,7 @@ const AdminUserCreatePage = ({ onSuccess }) => {
         ...prev,
         userEmail: emailId ? (domain ? emailId + domain : null) : null,
     }));
-};
+  };
 
   const handleEmailDomainChange = (e) => {
     const selected = e.target.value;
@@ -78,13 +77,11 @@ const AdminUserCreatePage = ({ onSuccess }) => {
     const domain = selected === "custom" ? customEmailDomain : selected;
     setForm((prev) => ({ ...prev, userEmail: emailId + domain }));
   };
-
   const handleCustomDomainChange = (e) => {
     const value = e.target.value;
     setCustomEmailDomain(value);
     setForm((prev) => ({ ...prev, userEmail: emailId + "@" + value }));
   };
-
   const handlePhoneChange = (e) => {
     const { name, value } = e.target;
     setPhoneParts((prev) => {
@@ -98,7 +95,6 @@ const AdminUserCreatePage = ({ onSuccess }) => {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     if (!form.userId) {
       setUploadMsg("❌ 먼저 ID를 입력해주세요.");
       return;
@@ -108,7 +104,6 @@ const AdminUserCreatePage = ({ onSuccess }) => {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("userId", form.userId);
-
       const res = await uploadProfileImage(formData);
       setForm((prev) => ({ ...prev, userImgUrl: res.data }));
       setUploadMsg("✔ 이미지 업로드에 성공하였습니다.");
@@ -116,31 +111,27 @@ const AdminUserCreatePage = ({ onSuccess }) => {
       setUploadMsg("❌ 이미지 업로드에 실패하였습니다.");
     }
   };
-  
   const cleanFormBeforeSubmit = () => {
     const newForm = { ...form };
     if (!emailId) newForm.userEmail = null;
     if (!phoneParts.part2 || !phoneParts.part3) newForm.userPhone = null;
     return newForm;
   };
-  
-
   const handleSubmit = async () => {
     try {
-      const finalForm = cleanFormBeforeSubmit(); 
+      const finalForm = cleanFormBeforeSubmit();
       const response = await createUser(finalForm);
       const msg =
         typeof response.data === "string"
-          ? response.data
+          ?
+response.data
           : response.data.message ?? "응답 메시지를 확인할 수 없습니다.";
-
       dispatch(
         showModal({
           message: msg,
           type: "success",
         })
       );
-
       onSuccess();
 
       setForm(initialForm);
@@ -158,7 +149,6 @@ const AdminUserCreatePage = ({ onSuccess }) => {
       else if (typeof errorData === "object" && errorData.message)
         // message = errorData.message;
         console.log(errorData.message);
-
       dispatch(
         showModal({
           message,
@@ -169,7 +159,9 @@ const AdminUserCreatePage = ({ onSuccess }) => {
   };
 
   return (
-    <div className="w-full sm:max-w-3xl mx-auto mt-4 sm:mt-6 md:mt-8 p-4 md:p-6 bg-white shadow-md rounded-lg">
+    // AdminUserCreatePage의 최상위 div에서 자체적인 높이 제한, 스크롤, 배경/그림자/패딩 등 카드 스타일 제거
+    // BaseModal이 제공하는 패딩과 스크롤 기능을 따르도록 w-full만 유지하거나 필요한 최소한의 레이아웃 클래스만 사용
+    <div className="w-full"> 
       <h2 className="text-2xl font-bold text-center mb-6">학생 / 교수 등록</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
@@ -186,7 +178,7 @@ const AdminUserCreatePage = ({ onSuccess }) => {
           >
             <option value="STUDENT">학생</option>
             <option value="PROFESSOR">교수</option>
-          </select>
+           </select>
         </div>
 
         {/* ID */}
@@ -234,13 +226,13 @@ const AdminUserCreatePage = ({ onSuccess }) => {
 
         {/* 비밀번호 */}
         <div className="md:col-span-2">
-          <label className="block mb-1 text-sm font-medium text-gray-700">
+          <label className="block  mb-1 text-sm font-medium text-gray-700">
             비밀번호 *
           </label>
           <div className="relative">
             <input
               name="userPassword"
-              type={showPassword ? "text" : "password"}
+              type={showPassword ?  "text" : "password"}
               className="w-full p-2 border rounded pr-12"
               placeholder="기본값 : 생년월일 6자리 + !"
               value={form.userPassword}
@@ -250,8 +242,8 @@ const AdminUserCreatePage = ({ onSuccess }) => {
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-blue-600 hover:text-blue-800"
-            >
-              {showPassword ? "🔓" : "🔒"}
+             >
+              {showPassword ?  "🔓" : "🔒"}
             </button>
           </div>
         </div>
@@ -264,7 +256,7 @@ const AdminUserCreatePage = ({ onSuccess }) => {
           <select
             name="departmentId"
             className="w-full p-2 border rounded"
-            value={form.departmentId !== null ? String(form.departmentId) : ""}
+            value={form.departmentId !== null ?  String(form.departmentId) : ""}
             onChange={(e) => {
               const selected = e.target.value;
               setForm((prev) => ({
@@ -279,7 +271,7 @@ const AdminUserCreatePage = ({ onSuccess }) => {
                 {d.departmentName}
               </option>
             ))}
-          </select>
+           </select>
         </div>
 
         {/* 이미지 업로드 */}
@@ -298,7 +290,7 @@ const AdminUserCreatePage = ({ onSuccess }) => {
         </div>
 
         {/* 등록 버튼 */}
-        <div className="md:col-span-2">
+         <div className="md:col-span-2">
           <button
             onClick={handleSubmit}
             className="w-full mt-4 bg-blue-600 hover:bg-blue-800 text-white font-semibold py-2.5 text-base rounded-lg transition"
@@ -307,7 +299,7 @@ const AdminUserCreatePage = ({ onSuccess }) => {
           </button>
         </div>
       </div>
-    </div>
+     </div>
   );
 };
 

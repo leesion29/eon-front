@@ -65,10 +65,10 @@ const ProfessorClassCreatePage = ({ onSuccess, professorId }) => {
     }
   };
 
-  const getSemesterOptions = () => {
-    const year = new Date().getFullYear();
-    return [`${year}-1`, `${year}-2`, `${year + 1}-1`, `${year + 1}-2`];
-  };
+  // const getSemesterOptions = () => {
+  //   const year = new Date().getFullYear();
+  //   return [`${year}-1`, `${year}-2`, `${year + 1}-1`, `${year + 1}-2`];
+  // };
 
   useEffect(() => {
     getAllSemesters()
@@ -119,7 +119,7 @@ const ProfessorClassCreatePage = ({ onSuccess, professorId }) => {
   };
   
   useEffect(() => {
-    if (allSemester) { // Ensure allSemester is not null before calling
+    if (allSemester) {
       getCurSemester();
     }
   }, [allSemester]);

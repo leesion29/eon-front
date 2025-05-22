@@ -223,12 +223,12 @@ const data = await findStudentName(leaveId, type);
                         상태:
                       </span>
                       <span
-                        className={`w-1/4 text-xs col-span-2 px-2 py-1 rounded font-semibold ${
-                          getStatusLabel(req.status) === "승인"
-                            ? "bg-green-100 text-green-800"
-                            : getStatusLabel(req.status) === "거절"
-                            ? "bg-red-100 text-red-800"
-                            : "bg-yellow-100 text-yellow-800"
+                        className={`w-1/4 text-xs col-span-2 rounded font-semibold ${
+                          req.status === "승인"
+                            ? "text-green-600"
+                            : req.status === "거절"
+                            ? "text-red-600"
+                            : "text-yellow-600"
                         }`}
                       >
                         {getStatusLabel(req.status)}

@@ -157,7 +157,7 @@ const AdminLectureRoomPage = () => {
         </h2>
         <button
           onClick={() => setIsCreateModalOpen(true)}
-          className="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800 transition"
+          className="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800 transition text-xs sm:text-base"
         >
           강의실 등록
         </button>
