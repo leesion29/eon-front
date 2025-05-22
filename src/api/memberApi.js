@@ -19,7 +19,7 @@ export const loginPost = async (loginParam) => {
 
 // 사용자 정보 조회 (인증 필요)
 export const fetchUserInfo = (id) => {
-  console.log("id: ", id);
+  // console.log("id: ", id);
   return axios.get(`${prefix}/${id}`, getAuthHeader());
 };
 

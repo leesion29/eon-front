@@ -182,7 +182,7 @@ const AdminUserListPage = () => {
             <tbody className="block sm:table-row-group text-gray-700 text-sm border">
               {users.dtoList.length === 0 ? (
                 <tr className="block sm:table-row w-full">
-                  {" "}
+                  
                   {/* sm:table-row ensures it doesn't break table structure on desktop if empty */}
                   <td
                     colSpan={tableHeaders.length}

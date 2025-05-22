@@ -8,7 +8,6 @@ import {
 } from "../../api/adminLeaveReturnApi";
 import { getAllSemesters } from "../../api/adminScheduleApi";
 import PageComponent from "../../components/PageComponent";
-
 const AdminLeavePage = () => {
   const [leaveRequests, setLeaveRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,7 +24,6 @@ const AdminLeavePage = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-
   const fetchLeaveRequests = async () => {
     try {
       setLoading(true);
@@ -42,7 +40,6 @@ const AdminLeavePage = () => {
   useEffect(() => {
     fetchLeaveRequests();
   }, []);
-
   const getReasonLabel = (reason) => {
     const map = {
       MILITARY: "군대",
@@ -82,7 +79,6 @@ const AdminLeavePage = () => {
       return "-";
     }
   };
-
   const handleApprove = async (request) => {
     try {
       await responseLeave(request.leaveId, {
@@ -106,7 +102,6 @@ const AdminLeavePage = () => {
     setDenialReason("");
     setRejectModalOpen(true);
   };
-
   const handleReject = async (e) => {
     e.preventDefault();
     if (!denialReason.trim()) {
@@ -143,14 +138,13 @@ const AdminLeavePage = () => {
     return (
       <div className="flex justify-center items-center h-64">로딩 중...</div>
     );
-
   return (
     <div className="w-4/5 mx-auto sm:w-full mt-4 sm:mt-6 md:mt-10">
       <div className="w-full sm:max-w-5xl sm:mx-auto bg-white shadow-md rounded-md p-4 md:p-6 lg:p-8 mb-8">
-        <h2 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-6">
+        <h2 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-6 sm:mb-4">
           🔍 휴학 신청 관리
         </h2>
-
+        <hr className="sm:pt-8 pt-5" />
         {paginatedLeaveRequests.length === 0 && !loading ? (
           <p className="py-4 text-center text-gray-400">
             처리할 휴학 신청 내역이 없습니다.
@@ -159,176 +153,186 @@ const AdminLeavePage = () => {
           <>
             <div className="md:hidden space-y-3">
               {paginatedLeaveRequests.map((req, idx) => (
-                <div
-                  key={`${req.leaveId}-mobile-card`}
-                  className="py-3 border-b border-gray-200 last:border-b-0"
-                >
-                  <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
-                    <span className="font-medium text-gray-500 text-xs col-span-1">
-                      No:
-                    </span>
-                    <span className="text-xs text-gray-800 col-span-2">
-                      {(currentPage - 1) * itemsPerPage + idx + 1}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
-                    <span className="font-medium text-gray-500 text-xs col-span-1">
-                      학번:
-                    </span>
-                    <span className="text-xs text-gray-800 col-span-2">
-                      {req.student}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
-                    <span className="font-medium text-gray-500 text-xs col-span-1">
-                      이름:
-                    </span>
-                    <span
-                      id={`${req.leaveId}-mobile`}
-                      className="text-xs text-gray-800 col-span-2"
-                    >
-                      불러오는 중...
-                    </span>
-                    {
-                      void requestAnimationFrame(() =>
-                        handleStudentName(req.leaveId, "leave").then((n) => {
-                          const element = document.getElementById(
-                            `${req.leaveId}-mobile`
-                          );
-                          if (element) element.innerText = n;
-                        })
-                      )
-                    }
-                  </div>
-                  <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
-                    <span className="font-medium text-gray-500 text-xs col-span-1">
-                      신청사유:
-                    </span>
-                    <span className="text-xs text-gray-800 col-span-2">
-                      {getReasonLabel(req.reason)}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
-                    <span className="font-medium text-gray-500 text-xs col-span-1">
-                      상세사유:
-                    </span>
-                    <span className="text-xs text-gray-800 col-span-2 break-all truncate">
-                      {req.reasonDetail}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
-                    <span className="font-medium text-gray-500 text-xs col-span-1">
-                      신청일:
-                    </span>
-                    <span className="text-xs text-gray-800 col-span-2">
-                      {new Date(req.requestDate).toLocaleDateString("ko-KR")}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
-                    <span className="font-medium text-gray-500 text-xs col-span-1">
-                      복학예정:
-                    </span>
-                    <span
-                      id={`semester-${req.leaveId}-mobile`}
-                      className="text-xs text-gray-800 col-span-2"
-                    >
-                      불러오는 중...
-                    </span>
-                    {
-                      void requestAnimationFrame(() =>
-                        handlePrintSemester(req.expectedSemester).then(
-                          (label) => {
-                            const element = document.getElementById(
-                              `semester-${req.leaveId}-mobile`
-                            );
-                            if (element) element.innerText = label;
-                          }
-                        )
-                      )
-                    }
-                  </div>
-                  <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
-                    <span className="font-medium text-gray-500 text-xs col-span-1">
-                      상태:
-                    </span>
-                    <span
-                      className={`w-1/4 text-xs col-span-2 px-2 py-1 rounded font-semibold ${
-                        req.status === "승인"
-                          ? "bg-green-100 text-green-800"
-                          : req.status === "거절"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {getStatusLabel(req.status)}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
-                    <span className="font-medium text-gray-500 text-xs col-span-1">
-                      처리일:
-                    </span>
-                    <span className="text-xs text-gray-800 col-span-2">
-                      {req.approvedDate
-                        ? new Date(req.approvedDate).toLocaleDateString("ko-KR")
-                        : "-"}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-x-2 mb-2 items-center">
-                    <span className="font-medium text-gray-500 text-xs col-span-1">
-                      거절사유:
-                    </span>
-                    <span className="text-xs text-gray-800 col-span-2 break-all truncate">
-                      {req.denialReason || "-"}
-                    </span>
-                  </div>
-                  {req.status === "PENDING" && (
-                    <div className="flex justify-end space-x-2 mt-3">
-                      <button
-                        onClick={() => handleApprove(req)}
-                        className="bg-green-600 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-green-700 transition"
-                      >
-                        승인
-                      </button>
-                      <button
-                        onClick={() => openRejectModal(req)}
-                        className="bg-red-600 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-red-700 transition"
-                      >
-                        거절
-                      </button>
+                <React.Fragment key={`${req.leaveId}-mobile-card-fragment`}>
+                  <div className="py-3">
+                    <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
+                      <span className="font-medium text-gray-500 text-xs col-span-1">
+                        No:
+                      </span>
+                      <span className="text-xs text-gray-800 col-span-2">
+                        {(currentPage - 1) * itemsPerPage + idx + 1}
+                      </span>
                     </div>
+                    <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
+                      <span className="font-medium text-gray-500 text-xs col-span-1">
+                        학번:
+                      </span>
+                      <span className="text-xs text-gray-800 col-span-2">
+                        {req.student}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
+                      <span className="font-medium text-gray-500 text-xs col-span-1">
+                        이름:
+                      </span>
+                      <span
+                        id={`${req.leaveId}-mobile`}
+                        className="text-xs text-gray-800 col-span-2"
+                      >
+                        불러오는 중...
+                      </span>
+                      {
+                        void requestAnimationFrame(() =>
+                          handleStudentName(req.leaveId, "leave").then((n) => {
+                            const element = document.getElementById(
+                              `${req.leaveId}-mobile`
+                            );
+                            if (element) element.innerText = n;
+                          })
+                        )
+                      }
+                    </div>
+                    <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
+                      <span className="font-medium text-gray-500 text-xs col-span-1">
+                        신청사유:
+                      </span>
+                      <span className="text-xs text-gray-800 col-span-2">
+                        {getReasonLabel(req.reason)}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
+                      <span className="font-medium text-gray-500 text-xs col-span-1">
+                        상세사유:
+                      </span>
+                      <span className="text-xs text-gray-800 col-span-2 break-all truncate">
+                        {req.reasonDetail}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
+                      <span className="font-medium text-gray-500 text-xs col-span-1">
+                        신청일:
+                      </span>
+                      <span className="text-xs text-gray-800 col-span-2">
+                        {new Date(req.requestDate).toLocaleDateString("ko-KR")}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
+                      <span className="font-medium text-gray-500 text-xs col-span-1">
+                        복학예정:
+                      </span>
+                      <span
+                        id={`semester-${req.leaveId}-mobile`}
+                        className="text-xs text-gray-800 col-span-2"
+                      >
+                        불러오는 중...
+                      </span>
+                      {
+                        void requestAnimationFrame(() =>
+                          handlePrintSemester(req.expectedSemester).then(
+                            (label) => {
+                              const element = document.getElementById(
+                                `semester-${req.leaveId}-mobile`
+                              );
+                              if (element) element.innerText = label;
+                            }
+                          )
+                        )
+                      }
+                    </div>
+                    <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
+                      <span className="font-medium text-gray-500 text-xs col-span-1">
+                        상태:
+                      </span>
+                      <span
+                        className={`w-1/4 text-xs col-span-2 px-2 py-1 rounded font-semibold ${
+                          req.status === "승인"
+                            ? "bg-green-100 text-green-800"
+                            : req.status === "거절"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
+                        {getStatusLabel(req.status)}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-x-2 mb-1 items-center">
+                      <span className="font-medium text-gray-500 text-xs col-span-1">
+                        처리일:
+                      </span>
+                      <span className="text-xs text-gray-800 col-span-2">
+                        {req.approvedDate
+                          ? new Date(req.approvedDate).toLocaleDateString(
+                              "ko-KR"
+                            )
+                          : "-"}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-x-2 mb-2 items-center">
+                      <span className="font-medium text-gray-500 text-xs col-span-1">
+                        거절사유:
+                      </span>
+                      <span className="text-xs text-gray-800 col-span-2 break-all truncate">
+                        {req.denialReason || "-"}
+                      </span>
+                    </div>
+                    {req.status === "대기" && (
+                      <div className="flex justify-end space-x-2 mt-3">
+                        <button
+                          onClick={() => handleApprove(req)}
+                          className="bg-green-600 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-green-700 transition"
+                        >
+                          승인
+                        </button>
+                        <button
+                          onClick={() => openRejectModal(req)}
+                          className="bg-red-600 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-red-700 transition"
+                        >
+                          거절
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  {idx < paginatedLeaveRequests.length - 1 && (
+                    <hr className="border-t border-gray-200" />
                   )}
-                </div>
+                </React.Fragment>
               ))}
+              <hr />
             </div>
 
             <div className="hidden md:block overflow-x-auto">
               <table className="min-w-full table-auto border border-gray-300 rounded text-sm">
                 <thead className="bg-gray-50 text-gray-600 uppercase">
-                  <tr className="text-center h-12">
-                    <th className="py-3 px-4">No</th>
-                    <th className="py-3 px-4">학번</th>
-                    <th className="py-3 px-4">이름</th>
-                    <th className="py-3 px-4">신청 사유</th>
-                    <th className="py-3 px-4">상세 사유</th>
-                    <th className="py-3 px-4">신청일</th>
-                    <th className="py-3 px-4">복학 예정 학기</th>
-                    <th className="py-3 px-4">처리 상태</th>
-                    <th className="py-3 px-4">처리일</th>
-                    <th className="py-3 px-4">거절 사유</th>
-                    <th className="py-3 px-4">관리</th>
+                  <tr className="text-center">
+                    <th className="py-2 px-3">No</th>
+                    <th className="py-2 px-3">학번</th>
+                    <th className="py-2 px-3">이름</th>
+                    <th className="py-2 px-3 w-0">
+                      신청
+                      <br />
+                      사유
+                    </th>
+                    <th className="py-2 px-3">상세 사유</th>
+                    <th className="py-2 px-3 whitespace-nowrap">신청일</th>
+                    <th className="py-2 px-3 whitespace-nowrap">
+                      복학 예정 학기
+                    </th>
+                    <th className="py-2 px-3">처리상태</th>
+                    <th className="py-2 px-3">처리일</th>
+                    <th className="py-2 px-3">거절 사유</th>
+                    <th className="py-2 px-3">관리</th>
                   </tr>
                 </thead>
                 <tbody className="text-gray-700 text-center">
                   {paginatedLeaveRequests.map((req, idx) => (
-                    <tr
-                      key={req.leaveId}
-                      className="border-t h-14 hover:bg-gray-50"
-                    >
-                      <td className="py-2 px-4">
+                    <tr key={req.leaveId} className="border-t hover:bg-gray-50">
+                      <td className="py-1.5 px-3 whitespace-nowrap">
                         {(currentPage - 1) * itemsPerPage + idx + 1}
                       </td>
-                      <td className="py-2 px-4">{req.student}</td>
-                      <td className="py-2 px-4">
+                      <td className="py-1.5 px-3 whitespace-nowrap">
+                        {req.student}
+                      </td>
+                      <td className="py-1.5 px-3 whitespace-nowrap">
                         {
                           void requestAnimationFrame(() =>
                             handleStudentName(req.leaveId, "leave").then(
@@ -343,16 +347,16 @@ const AdminLeavePage = () => {
                         }
                         <span id={req.leaveId}>불러오는 중...</span>
                       </td>
-                      <td className="py-2 px-4">
+                      <td className="py-1.5 px-3 whitespace-nowrap">
                         {getReasonLabel(req.reason)}
                       </td>
-                      <td className="py-2 px-4 max-w-xs truncate">
+                      <td className="py-1.5 px-3 max-w-xs break-words">
                         {req.reasonDetail}
                       </td>
-                      <td className="py-2 px-4">
+                      <td className="py-1.5 px-3 whitespace-nowrap">
                         {new Date(req.requestDate).toLocaleDateString("ko-KR")}
                       </td>
-                      <td className="py-2 px-4">
+                      <td className="py-1.5 px-3 whitespace-nowrap">
                         {
                           void requestAnimationFrame(() =>
                             handlePrintSemester(req.expectedSemester).then(
@@ -369,44 +373,45 @@ const AdminLeavePage = () => {
                           불러오는 중...
                         </span>
                       </td>
-                      <td className="py-2 px-4">
+                      <td className="py-1.5">
                         <span
-                          className={`px-2 py-1 rounded text-sm font-semibold ${
+                          className={`inline-block whitespace-nowrap px-1 py-1 rounded-md text-xs font-semibold ${
                             req.status === "승인"
                               ? "bg-green-100 text-green-800"
                               : req.status === "거절"
                               ? "bg-red-100 text-red-800"
                               : "bg-yellow-100 text-yellow-800"
-                          }`} 
+                          }`}
                         >
                           {getStatusLabel(req.status)}
                         </span>
                       </td>
-                      <td className="py-2 px-4">
+                      <td className="py-1.5 px-3 whitespace-nowrap">
                         {req.approvedDate
                           ? new Date(req.approvedDate).toLocaleDateString(
                               "ko-KR"
                             )
                           : "-"}
                       </td>
-                      <td className="py-2 px-4 max-w-xs truncate">
+                      <td className="py-1.5 px-3 max-w-xs break-words">
                         {req.denialReason || "-"}
                       </td>
-                      <td className="py-2 px-4">
-                        {req.status === "PENDING" && (
+                      <td className="py-1.5 px-3">
+                        {req.status === "대기" && (
                           <div className="flex space-x-1 justify-center">
                             <button
                               onClick={() => handleApprove(req)}
-                              className="bg-green-600 text-white px-3 py-1 rounded text-xs font-medium hover:bg-green-700 transition"
+                              className="text-base font-medium p-1 transition-colors duration-150"
                             >
-                              승인
+                              ✔
                             </button>
                             <button
                               onClick={() => openRejectModal(req)}
-                              className="bg-red-600 text-white px-3 py-1 rounded text-xs font-medium hover:bg-red-700 transition"
+                              className="text-base font-medium p-1 transition-colors duration-150"
                             >
-                              거절
+                              ❌
                             </button>
+                            &nbsp;
                           </div>
                         )}
                       </td>
