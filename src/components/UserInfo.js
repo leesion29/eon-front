@@ -118,9 +118,9 @@ const UserInfo = () => {
 
       {userRole === "STUDENT" && (
         <span>
-          <span className="mx-2 sm:mx-3 text-gray-400">|</span>
-          <span>
-            <span className="font-semibold hidden sm:inline">학적상태:</span>{" "}
+          <span className="mx-2 sm:mx-3 text-gray-400 hidden sm:inline">|</span>
+          <span className="hidden sm:inline">
+            <span className="font-semibold">학적상태:</span>{" "}
             {isLoading
               ? "불러오는 중..."
               : statusInfo?.graduationEligible
