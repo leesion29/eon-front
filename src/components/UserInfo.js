@@ -107,7 +107,7 @@ const UserInfo = () => {
       </span>
 
       {(userRole === "STUDENT" || userRole === "PROFESSOR") && (
-        <span className="hidden sm:inline"> {/* 이 span 전체를 모바일에서 숨기고, sm 이상에서 표시 */}
+        <span className="hidden sm:inline">
           <span className="mx-2 sm:mx-3 text-gray-400">|</span>
           <span>
             <span className="font-semibold">학과:</span>{" "}
@@ -117,10 +117,10 @@ const UserInfo = () => {
       )}
 
       {userRole === "STUDENT" && (
-        <span> {/* 이 부분은 학생일 경우 항상 렌더링 (모바일/데스크톱 동일) */}
+        <span>
           <span className="mx-2 sm:mx-3 text-gray-400">|</span>
           <span>
-            <span className="font-semibold">학적상태:</span>{" "}
+            <span className="font-semibold hidden sm:inline">학적상태:</span>{" "}
             {isLoading
               ? "불러오는 중..."
               : statusInfo?.graduationEligible

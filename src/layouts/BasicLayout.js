@@ -437,11 +437,11 @@ const BasicLayout = () => {
             className="bg-white rounded-xl sm:rounded-2xl md:rounded-3xl shadow-lg p-4 sm:p-6 md:p-10 flex-1"
             style={{
               minHeight: `calc(100vh - ${isMobileMenuOpen ? "80px" : "160px"})`,
-            }} // 헤더/푸터 높이 고려
-            key={location.pathname} // 경로 변경 시 애니메이션 트리거
+            }} 
+            key={location.pathname} 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }} // 퇴장 애니메이션 추가
+            exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
             <Outlet />
