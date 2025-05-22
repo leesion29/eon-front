@@ -169,10 +169,10 @@ const AdminUserCreatePage = ({ onSuccess }) => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
+    <div className="w-full sm:max-w-3xl mx-auto mt-4 sm:mt-6 md:mt-8 p-4 md:p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-bold text-center mb-6">학생 / 교수 등록</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         {/* 사용자 구분 */}
         <div>
           <label className="block mb-1 text-sm font-medium text-gray-700">
@@ -301,7 +301,7 @@ const AdminUserCreatePage = ({ onSuccess }) => {
         <div className="md:col-span-2">
           <button
             onClick={handleSubmit}
-            className="w-full mt-4 bg-blue-600 hover:bg-blue-800 text-white font-semibold py-3 rounded-lg transition"
+            className="w-full mt-4 bg-blue-600 hover:bg-blue-800 text-white font-semibold py-2.5 text-base rounded-lg transition"
           >
             등록
           </button>

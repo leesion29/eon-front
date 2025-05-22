@@ -6,6 +6,7 @@ import {
 } from "../../api/professorClassApi";
 import { useDispatch } from "react-redux";
 import { showModal } from "../../slices/modalSlice";
+import { getAllSemesters } from "../../api/adminScheduleApi";
 
 const initialForm = {
   courseId: "",
@@ -23,7 +24,8 @@ const ProfessorClassCreatePage = ({ onSuccess, professorId }) => {
   const [form, setForm] = useState({ ...initialForm, professorId });
   const [courses, setCourses] = useState([]);
   const [rooms, setRooms] = useState([]);
-
+  const [allSemester, setAllSemester] = useState(null);
+  const [currentSemester, setCurrentSemester] = useState(null);
   useEffect(() => {
     getCourses()
       .then((res) => setCourses(res.data))
@@ -68,9 +70,65 @@ const ProfessorClassCreatePage = ({ onSuccess, professorId }) => {
     return [`${year}-1`, `${year}-2`, `${year + 1}-1`, `${year + 1}-2`];
   };
 
+  useEffect(() => {
+    getAllSemesters()
+      .then((res) => {
+        setAllSemester(Array.isArray(res.data) ? res.data : []);
+      })
+      .catch(() => {
+        console.error("Failed to fetch all semesters.");
+        setAllSemester([]);
+      });
+  }, []);
+  
+  const getCurSemester = () => {
+    if (!allSemester || allSemester.length === 0) {
+      setCurrentSemester("");
+      return;
+    }
+  
+    const curDate = new Date();
+    curDate.setHours(0, 0, 0, 0);
+  
+    const findSemester = allSemester.filter((semester) => {
+      if (!semester || typeof semester.startDate !== 'string' || typeof semester.endDate !== 'string') {
+        return false;
+      }
+      const start = new Date(semester.startDate);
+      const end = new Date(semester.endDate);
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+        return false;
+      }
+      return curDate >= start && curDate <= end;
+    });
+  
+    if (findSemester.length > 0) {
+      const foundSemester = findSemester[findSemester.length - 1];
+      let termDisplay = "";
+      if (foundSemester.term === "FIRST") {
+        termDisplay = "1학기";
+      } else if (foundSemester.term === "SECOND") {
+        termDisplay = "2학기";
+      } else {
+        termDisplay = foundSemester.term || "";
+      }
+      setCurrentSemester(`${foundSemester.year}년 ${termDisplay} `);
+    } else {
+      setCurrentSemester("");
+    }
+  };
+  
+  useEffect(() => {
+    if (allSemester) { // Ensure allSemester is not null before calling
+      getCurSemester();
+    }
+  }, [allSemester]);
+
   return (
     <div className="max-w-3xl mx-auto mt-6 p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-xl font-bold mb-4 text-center">강의 등록</h2>
+      <h2 className="text-xl font-bold mb-4 text-center">
+        <span className="text-blue-800 text-sm">{currentSemester || ""}</span><br/>강의 등록
+      </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* 과목 */}

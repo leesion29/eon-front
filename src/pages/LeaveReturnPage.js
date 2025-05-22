@@ -27,7 +27,7 @@ const LeavePage = () => {
   const [leaveList, setLeaveList] = useState(null);
   const [returnList, setReturnList] = useState(null);
 
-  const fetchSemeaterInfo = async () => {
+  const fetchSemesterInfo = async () => {
     const res = await getAllSemesters();
     const currentDate = new Date();
     const filteredReturnSemester = res.data.filter((s) => {
@@ -50,11 +50,10 @@ const LeavePage = () => {
         const data = await seeMyReturnRequest(userId);
         setReturnList(data);
       };
-      fetchSemeaterInfo();
+      fetchSemesterInfo();
       fetchLeaveList();
       fetchReturnList();
-    } catch (error) {
-    }
+    } catch (error) {}
   }, [userId]);
 
   const leaveReasons = [
@@ -142,46 +141,79 @@ const LeavePage = () => {
         <div className="overflow-x-auto">
           <table className="min-w-full w-full text-[9px] sm:text-[10px] md:text-sm text-center border border-gray-200 table-auto">
             <colgroup>
-              <col className="w-[10%] sm:w-[8%] md:w-[5%]" /> 
-              <col className="w-[15%] sm:w-[12%] md:w-[10%]" /> 
+              <col className="w-[10%] sm:w-[8%] md:w-[5%]" />
+              <col className="w-[15%] sm:w-[12%] md:w-[10%]" />
               <col className="w-auto min-w-[80px] sm:min-w-[100px] md:min-w-[150px]" />
-              <col className="w-[20%] sm:w-[18%] md:w-[12%]" /> 
-              <col className="w-[20%] sm:w-[18%] md:w-[15%]" /> 
-              <col className="w-[15%] sm:w-[12%] md:w-[10%]" /> 
-              <col className="hidden md:table-cell md:w-[12%]" /> 
+              <col className="w-[20%] sm:w-[18%] md:w-[12%]" />
+              <col className="w-[20%] sm:w-[18%] md:w-[15%]" />
+              <col className="w-[15%] sm:w-[12%] md:w-[10%]" />
+              <col className="hidden md:table-cell md:w-[12%]" />
               <col className="hidden md:table-cell md:min-w-[150px] md:w-auto" />
             </colgroup>
             <thead className="bg-gray-50 text-gray-500 text-[8px] sm:text-[9px] md:text-xs uppercase">
               <tr>
-                <th className="py-1 px-0.5 sm:py-1.5 sm:px-1 md:py-3 md:px-6">NO.</th>
-                <th className="py-1 px-0.5 sm:py-1.5 sm:px-1 md:py-3 md:px-6">사유</th>
-                <th className="py-1 px-0.5 sm:py-1.5 sm:px-1 md:py-3 md:px-6">상세사유</th>
-                <th className="py-1 px-0.5 sm:py-1.5 sm:px-1 md:py-3 md:px-6 whitespace-nowrap">접수일</th>
-                <th className="py-1 px-0.5 sm:py-1.5 sm:px-1 md:py-3 md:px-6 whitespace-nowrap">예정학기</th>
-                <th className="py-1 px-0.5 sm:py-1.5 sm:px-1 md:py-3 md:px-6">상태</th>
-                <th className="hidden md:table-cell py-1.5 px-1 md:py-3 md:px-6 whitespace-nowrap">처리일</th>
-                <th className="hidden md:table-cell py-1.5 px-1 md:py-3 md:px-6">미승인사유</th>
+                <th className="py-1 px-0.5 sm:py-1.5 sm:px-1 md:py-3 md:px-6">
+                  NO.
+                </th>
+                <th className="py-1 px-0.5 sm:py-1.5 sm:px-1 md:py-3 md:px-6">
+                  사유
+                </th>
+                <th className="py-1 px-0.5 sm:py-1.5 sm:px-1 md:py-3 md:px-6">
+                  상세사유
+                </th>
+                <th className="py-1 px-0.5 sm:py-1.5 sm:px-1 md:py-3 md:px-6 whitespace-nowrap">
+                  접수일
+                </th>
+                <th className="py-1 px-0.5 sm:py-1.5 sm:px-1 md:py-3 md:px-6 whitespace-nowrap">
+                  예정학기
+                </th>
+                <th className="py-1 px-0.5 sm:py-1.5 sm:px-1 md:py-3 md:px-6">
+                  상태
+                </th>
+                <th className="hidden md:table-cell py-1.5 px-1 md:py-3 md:px-6 whitespace-nowrap">
+                  처리일
+                </th>
+                <th className="hidden md:table-cell py-1.5 px-1 md:py-3 md:px-6">
+                  미승인사유
+                </th>
               </tr>
             </thead>
             <tbody className="text-gray-700">
               {leaveList && leaveList.length > 0 ? (
                 leaveList.map((l, i) => (
                   <tr className="border-t hover:bg-gray-50" key={i}>
-                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle">{i + 1}</td>
-                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">{l.reason}</td>
-                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle text-center break-words">{l.reasonDetail}</td>
-                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">{l.requestDate}</td>
+                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle">
+                      {i + 1}
+                    </td>
+                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">
+                      {l.reason}
+                    </td>
+                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle text-center break-words">
+                      {l.reasonDetail}
+                    </td>
+                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">
+                      {l.requestDate}
+                    </td>
                     <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">
                       {handlePrintSemester(l.expectedSemester) || ""}
                     </td>
-                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">{l.status}</td>
-                    <td className="hidden md:table-cell py-2 px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">{l.approvedDate || "-"}</td>
-                    <td className="hidden md:table-cell py-2 px-1 md:py-3 md:px-6 align-middle text-left break-words">{l.denialReason || "-"}</td>
+                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">
+                      {l.status}
+                    </td>
+                    <td className="hidden md:table-cell py-2 px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">
+                      {l.approvedDate || "-"}
+                    </td>
+                    <td className="hidden md:table-cell py-2 px-1 md:py-3 md:px-6 align-middle text-left break-words">
+                      {l.denialReason || "-"}
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr className="border-t">
-                  <td colSpan={6} className="md:col-span-8 py-2.5 sm:py-3 md:py-4 text-gray-400 text-[8px] sm:text-[9px] md:text-xs">
+                  <td
+                    colSpan={6}
+                    className="md:col-span-8 py-2.5 sm:py-3 md:py-4 text-gray-400 text-[8px] sm:text-[9px] md:text-xs"
+                  >
                     휴학 신청 내역이 없습니다.
                   </td>
                 </tr>
@@ -191,7 +223,7 @@ const LeavePage = () => {
           <div className="flex justify-end mt-2 sm:mt-3 md:mt-6">
             <button
               onClick={() => {
-                setMessage(""); 
+                setMessage("");
                 setLeaveModalOpen(true);
               }}
               className="px-3 py-1.5 text-[9px] sm:text-xs sm:px-4 sm:py-2 md:text-sm md:px-8 md:py-4 lg:text-lg bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 transition-colors"
@@ -208,41 +240,66 @@ const LeavePage = () => {
         </h2>
         <div className="overflow-x-auto">
           <table className="min-w-full w-full text-[9px] sm:text-[10px] md:text-sm text-center border border-gray-200 table-auto">
-             <colgroup>
-                <col className="w-[8%] sm:w-[7%] md:w-[5%]" />
-                <col className="w-[25%] sm:w-[22%] md:w-[15%]" />
-                <col className="w-[27%] sm:w-[25%] md:w-[20%]" />
-                <col className="w-[20%] sm:w-[18%] md:w-[15%]" />
-                <col className="hidden md:table-cell md:w-[15%]" /> 
-                <col className="w-auto min-w-[70px] sm:min-w-[80px] md:min-w-[150px]" />
+            <colgroup>
+              <col className="w-[8%] sm:w-[7%] md:w-[5%]" />
+              <col className="w-[25%] sm:w-[22%] md:w-[15%]" />
+              <col className="w-[27%] sm:w-[25%] md:w-[20%]" />
+              <col className="w-[20%] sm:w-[18%] md:w-[15%]" />
+              <col className="hidden md:table-cell md:w-[15%]" />
+              <col className="w-auto min-w-[70px] sm:min-w-[80px] md:min-w-[150px]" />
             </colgroup>
             <thead className="bg-gray-50 text-gray-500 text-[8px] sm:text-[9px] md:text-xs uppercase">
               <tr>
-                <th className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6">NO.</th>
-                <th className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 whitespace-nowrap">접수일</th>
-                <th className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 whitespace-nowrap">복학학기</th>
-                <th className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6">상태</th>
-                <th className="hidden md:table-cell py-1.5 px-1 md:py-3 md:px-6 whitespace-nowrap">처리일</th>
-                <th className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6">거절사유</th>
+                <th className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6">
+                  NO.
+                </th>
+                <th className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 whitespace-nowrap">
+                  접수일
+                </th>
+                <th className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 whitespace-nowrap">
+                  복학학기
+                </th>
+                <th className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6">
+                  상태
+                </th>
+                <th className="hidden md:table-cell py-1.5 px-1 md:py-3 md:px-6 whitespace-nowrap">
+                  처리일
+                </th>
+                <th className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6">
+                  거절사유
+                </th>
               </tr>
             </thead>
             <tbody className="text-gray-700">
               {returnList && returnList.length > 0 ? (
                 returnList.map((r, i) => (
                   <tr className="border-t hover:bg-gray-50" key={i}>
-                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle">{i + 1}</td>
-                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">{r.requestDate}</td>
+                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle">
+                      {i + 1}
+                    </td>
+                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">
+                      {r.requestDate}
+                    </td>
                     <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">
                       {handlePrintSemester(r.semester) || ""}
                     </td>
-                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">{r.status}</td>
-                    <td className="hidden md:table-cell py-2 px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">{r.approvedDate || "-"}</td>
-                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle text-left break-words">{r.denialReason || "-"}</td>
+                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">
+                      {r.status}
+                    </td>
+                    <td className="hidden md:table-cell py-2 px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">
+                      {r.approvedDate || "-"}
+                    </td>
+                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle text-left break-words">
+                      {r.denialReason || "-"}
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr className="border-t">
-                  <td colSpan={4} className="md:col-span-6 py-2.5 sm:py-3 md:py-4 text-gray-400 text-[8px] sm:text-[9px] md:text-xs">
+                  <td
+                    colSpan={4}
+                    className="md:col-span-6 py-2.5 sm:py-3 md:py-4 text-gray-400 text-[8px] sm:text-[9px] md:text-xs"
+                  >
                     복학 신청 내역이 없습니다.
                   </td>
                 </tr>
@@ -262,7 +319,7 @@ const LeavePage = () => {
                   setReturnModalOpen(true);
                 } catch (err) {
                   console.error("복학 신청 오류:", err);
-                  setAlertOpen(true); 
+                  setAlertOpen(true);
                 }
               }}
               className="px-3 py-1.5 text-[9px] sm:text-xs sm:px-4 sm:py-2 md:text-sm md:px-8 md:py-4 lg:text-lg bg-green-600 text-white font-semibold rounded-md shadow hover:bg-green-700 transition-colors"
@@ -277,17 +334,24 @@ const LeavePage = () => {
         isOpen={leaveModalOpen}
         onClose={() => {
           setLeaveModalOpen(false);
-          setMessage(""); 
+          setMessage("");
         }}
       >
-        <form onSubmit={handleLeaveSubmit} className="space-y-3 sm:space-y-4 md:space-y-6 p-2 sm:p-3 text-[9px] sm:text-[10px] md:text-sm">
-          <h2 className="text-sm sm:text-base md:text-lg font-bold">✈️ 휴학 신청</h2>
+        <form
+          onSubmit={handleLeaveSubmit}
+          className="space-y-3 sm:space-y-4 md:space-y-6 p-2 sm:p-3 text-[9px] sm:text-[10px] md:text-sm"
+        >
+          <h2 className="text-sm sm:text-base md:text-lg font-bold">
+            ✈️ 휴학 신청
+          </h2>
           <div className="text-[8px] sm:text-[9px] md:text-xs font-bold text-red-500 mt-1 sm:mt-1.5 md:mt-2 text-left mb-0.5 sm:mb-1">
             * 휴학이 승인되면 수강중인 모든 과목은 자동 취소되며, 성적이
             부여되지 않습니다.
           </div>
           <div>
-            <label className="block mb-0.5 sm:mb-1 font-medium text-[8px] sm:text-[9px] md:text-xs">휴학 사유</label>
+            <label className="block mb-0.5 sm:mb-1 font-medium text-[8px] sm:text-[9px] md:text-xs">
+              휴학 사유
+            </label>
             <select
               value={leaveType}
               onChange={(e) => setLeaveType(e.target.value)}
@@ -302,7 +366,9 @@ const LeavePage = () => {
             </select>
           </div>
           <div>
-            <label className="block mb-0.5 sm:mb-1 font-medium text-[8px] sm:text-[9px] md:text-xs">상세 사유</label>
+            <label className="block mb-0.5 sm:mb-1 font-medium text-[8px] sm:text-[9px] md:text-xs">
+              상세 사유
+            </label>
             <textarea
               value={leaveDetail}
               onChange={(e) => setLeaveDetail(e.target.value)}
@@ -312,7 +378,9 @@ const LeavePage = () => {
             />
           </div>
           <div>
-            <label className="block mb-0.5 sm:mb-1 font-medium text-[8px] sm:text-[9px] md:text-xs">복학 예정 학기</label>
+            <label className="block mb-0.5 sm:mb-1 font-medium text-[8px] sm:text-[9px] md:text-xs">
+              복학 예정 학기
+            </label>
             <select
               value={expectedSemesterId}
               onChange={(e) => setExpectedSemesterId(e.target.value)}
@@ -327,7 +395,11 @@ const LeavePage = () => {
                   </option>
                 ))}
             </select>
-            {message && <p className="text-red-500 pt-1 sm:pt-1.5 md:pt-2 text-[8px] sm:text-[9px]">{message}</p>}
+            {message && (
+              <p className="text-red-500 pt-1 sm:pt-1.5 md:pt-2 text-[8px] sm:text-[9px]">
+                {message}
+              </p>
+            )}
           </div>
           <div className="text-right pt-1 sm:pt-2">
             <button
@@ -343,14 +415,21 @@ const LeavePage = () => {
       <BaseModal
         isOpen={returnModalOpen}
         onClose={() => {
-            setReturnModalOpen(false);
-            setMessage("");
+          setReturnModalOpen(false);
+          setMessage("");
         }}
       >
-        <form onSubmit={handleReturnSubmit} className="space-y-3 sm:space-y-4 md:space-y-6 p-2 sm:p-3 text-[9px] sm:text-[10px] md:text-sm">
-          <h2 className="text-sm sm:text-base md:text-lg font-bold">✅ 복학 신청</h2>
+        <form
+          onSubmit={handleReturnSubmit}
+          className="space-y-3 sm:space-y-4 md:space-y-6 p-2 sm:p-3 text-[9px] sm:text-[10px] md:text-sm"
+        >
+          <h2 className="text-sm sm:text-base md:text-lg font-bold">
+            ✅ 복학 신청
+          </h2>
           <div>
-            <label className="block mb-0.5 sm:mb-1 font-medium text-[8px] sm:text-[9px] md:text-xs">복학할 학기</label>
+            <label className="block mb-0.5 sm:mb-1 font-medium text-[8px] sm:text-[9px] md:text-xs">
+              복학할 학기
+            </label>
             <select
               value={returnSemesterId}
               onChange={(e) => setReturnSemesterId(e.target.value)}
@@ -365,7 +444,11 @@ const LeavePage = () => {
                   </option>
                 ))}
             </select>
-            {message && <p className="text-red-500 pt-1 sm:pt-1.5 md:pt-2 text-[8px] sm:text-[9px]">{message}</p>}
+            {message && (
+              <p className="text-red-500 pt-1 sm:pt-1.5 md:pt-2 text-[8px] sm:text-[9px]">
+                {message}
+              </p>
+            )}
           </div>
           <div className="text-right pt-1 sm:pt-2">
             <button
