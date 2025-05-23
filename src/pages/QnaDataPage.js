@@ -196,7 +196,7 @@ const QnaDataPage = () => {
                       setAlertModalOpen(true);
                     }
                   }}
-                  className="text-green-500 hover:text-green-700 text-lg font-semibold px-3 rounded transition"
+                  className="text-green-500 hover:text-green-700 sm:text-lg text-sm font-semibold px-3 rounded transition"
                 >
                   📗답변 작성
                 </button>
@@ -213,7 +213,7 @@ const QnaDataPage = () => {
                       setAlertModalOpen(true);
                     }
                   }}
-                  className="text-red-500 hover:text-red-700 text-lg font-semibold py-2.5 px-3 rounded transition"
+                  className="text-red-500 hover:text-red-700 sm:text-lg text-sm font-semibold py-2.5 px-3 rounded transition"
                 >
                   ❌답변 삭제
                 </button>

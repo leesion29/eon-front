@@ -12,7 +12,7 @@ import { useReactToPrint } from "react-to-print";
 
 const AllGradePage = () => {
   const contentRef = useRef(null);
-  const reactToPrintFn = useReactToPrint({ content: () => contentRef.current }); // Updated to pass a function
+  const reactToPrintFn = useReactToPrint({ contentRef });
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.auth.userId);
 
@@ -26,12 +26,10 @@ const AllGradePage = () => {
     const localId = localStorage.getItem("id");
     if (!userId && localId) {
       dispatch(setUserIdAction(localId));
-      // loadAllRecords will be called by the other useEffect when userId is set
     } else if (userId) {
       loadAllRecords();
     }
-  }, [userId, dispatch]); // Added dispatch to dependency array
-
+  }, [userId, dispatch]);
   const loadAllRecords = async () => {
     try {
       const [recordsRes, totalRes] = await Promise.all([
@@ -40,11 +38,11 @@ const AllGradePage = () => {
       ]);
       setRecords(recordsRes.data);
       setTotalRecord(totalRes.data);
-      setMessage(""); // Clear previous messages
+      setMessage("");
     } catch {
       setMessage("전체 성적 정보를 불러올 수 없습니다.");
-      setRecords([]); // Ensure records is empty on error
-      setTotalRecord(null); // Ensure totalRecord is null on error
+      setRecords([]);
+      setTotalRecord(null);
     }
   };
 
@@ -53,7 +51,7 @@ const AllGradePage = () => {
     try {
       const res = await fetchStudentGradesBySemester(semesterId);
       setGrades(res.data);
-      setMessage(""); // Clear previous messages
+      setMessage("");
     } catch {
       setGrades([]);
       setMessage("선택한 학기의 과목별 성적을 불러올 수 없습니다.");
@@ -63,7 +61,7 @@ const AllGradePage = () => {
   return (
     <div className="w-full sm:w-4/5 mx-auto mt-4 sm:mt-6 md:mt-10 px-2 sm:px-0">
       <div ref={contentRef} className="space-y-6 sm:space-y-8">
-        {/* 전체 성적 카드 */}
+
         <div className="w-full mx-auto bg-white shadow-md rounded-md p-4 md:p-6 lg:p-8">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b pb-3 mb-4 sm:mb-6">
             <h2 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-2 sm:mb-0">
@@ -77,13 +75,13 @@ const AllGradePage = () => {
             </button>
           </div>
 
-          {message && records.length === 0 && ( // Show general message only if no records
+          {message && records.length === 0 && (
             <p className="py-4 text-center text-red-500 font-medium">
               {message}
             </p>
           )}
 
-          {/* Mobile View for Overall Grades */}
+
           <div className="md:hidden space-y-3">
             {records.length === 0 && !message ? (
               <p className="py-4 text-center text-gray-400">
@@ -135,7 +133,6 @@ const AllGradePage = () => {
             )}
           </div>
 
-          {/* Desktop View for Overall Grades */}
           <div className="hidden md:block overflow-x-auto">
             <table className="min-w-full table-auto border border-gray-300 rounded-md text-sm">
               <thead className="bg-gray-50 text-gray-600 uppercase text-xs sm:text-sm leading-normal">
@@ -199,7 +196,6 @@ const AllGradePage = () => {
           </div>
         </div>
 
-        {/* 과목별 성적 카드 */}
         <div className="w-full mx-auto bg-white shadow-md rounded-md p-4 md:p-6 lg:p-8">
           <div className="border-b pb-3 mb-4 sm:mb-6">
             <h2 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-2 sm:mb-0">
@@ -223,7 +219,7 @@ const AllGradePage = () => {
             )}
           </div>
           
-          {message && selectedSemesterId !== null && grades.length === 0 && ( // Show specific message if semester selected and no grades
+          {message && selectedSemesterId !== null && grades.length === 0 && ( 
              <p className="py-4 text-center text-red-500 font-medium">
               {message}
             </p>
@@ -233,13 +229,13 @@ const AllGradePage = () => {
             <p className="py-4 text-center text-gray-400">
               위 성적 테이블에서 학기를 클릭하여 조회할 수 있습니다.
             </p>
-          ) : grades.length === 0 && !message ? ( // No grades and no error message means just no data for that semester
+          ) : grades.length === 0 && !message ? ( 
             <p className="py-4 text-center text-gray-400">
               선택한 학기의 과목별 성적이 없습니다.
             </p>
           ) : grades.length > 0 ? (
             <>
-              {/* Mobile View for Subject Grades */}
+
               <div className="md:hidden space-y-3">
                 {grades.map((g, i) => (
                   <div key={`${g.courseName}-${i}-mobile`} className="py-3 border rounded-md p-3 border-gray-200">
@@ -267,7 +263,6 @@ const AllGradePage = () => {
                 ))}
               </div>
 
-              {/* Desktop View for Subject Grades */}
               <div className="hidden md:block overflow-x-auto">
                 <table className="min-w-full table-auto border border-gray-300 rounded-md text-sm">
                   <thead className="bg-gray-50 text-gray-600 uppercase text-xs sm:text-sm leading-normal">

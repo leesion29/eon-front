@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getQnaDetail, getQnaWriterId, updateQna } from "../api/qnaApi";
 import AlertModal from "../components/AlertModal";
-
 const QnaEditPage = () => {
   const location = useLocation();
   const questionId = location.state?.questionId;
@@ -17,12 +16,10 @@ const QnaEditPage = () => {
     content: "",
     questionId,
   });
-
   const [alertModalOpen, setAlertModalOpen] = useState(false);
   const [msg, setMsg] = useState("");
   const [type, setType] = useState("");
   const [goTarget, setGoTarget] = useState(null);
-
   useEffect(() => {
     const fetchContent = async () => {
       try {
@@ -42,11 +39,11 @@ const QnaEditPage = () => {
         setMessage("질문을 불러올 수 없습니다.");
       }
     };
-  
+
     const fetchWriter = async () => {
       try {
-      const data = await getQnaWriterId(questionId);
-      setWriterId(data);
+        const data = await getQnaWriterId(questionId);
+        setWriterId(data);
       } catch (error) {
         setMessage("작성자 정보를 불러올 수 없습니다.");
       }
@@ -57,12 +54,11 @@ const QnaEditPage = () => {
       fetchWriter();
     }
   }, [questionId]);
-
-
-
   const handleSecret = (title) => {
     const isSecret = document.getElementById("secret").checked;
-    return isSecret ? `🔒 ${title.replace(/^🔒\s*/, "")}` : title.replace(/^🔒\s*/, "");
+    return isSecret
+      ? `🔒 ${title.replace(/^🔒\s*/, "")}`
+      : title.replace(/^🔒\s*/, "");
   };
 
   const handleChange = (e) => {
@@ -84,7 +80,6 @@ const QnaEditPage = () => {
       setGoTarget(null);
     }
   };
-
   const handleSubmit = async () => {
     if (!contentData.title.trim() || !contentData.content.trim()) {
       setAlertData("error", "제목과 내용을 모두 입력해주세요.");
@@ -104,46 +99,56 @@ const QnaEditPage = () => {
       setAlertData("error", "수정에 실패했습니다.");
     }
   };
-
   return (
-    <div className="max-w-7xl mx-auto p-8 bg-white shadow-md rounded-md mt-10">
-      <h1 className="text-md font-bold text-left mb-6">Q&A 수정</h1>
+    <div className="max-w-7xl mx-auto p-8 bg-white shadow-md rounded-md mt-10 max-md:p-4 max-md:mt-6">
+      <h1 className="text-md font-bold text-left mb-6 max-md:mb-4">Q&A 수정</h1>
       <hr />
       <br />
-      {message && <p className="text-red-500 text-center">{message}</p>}
+      {message && (
+        <p className="text-red-500 text-center max-md:text-sm max-md:mb-3">
+          {message}
+        </p>
+      )}
       <table className="table-auto border-collapse border border-gray-400 w-full">
         <thead className="bg-blue-800">
           <tr>
-            <th className="border border-gray-400 px-4 py-2 text-white">제목</th>
-            <td className="border border-gray-400 px-4 py-2 bg-white">
+            <th className="border border-gray-400 px-4 py-2 text-white max-md:px-2 max-md:py-2 max-md:text-sm">
+              제목
+            </th>
+            <td className="border border-gray-400 px-4 py-2 bg-white max-md:px-2 max-md:py-2">
               <input
                 name="title"
-                className="w-full focus-visible:outline-none"
+                className="w-full focus-visible:outline-none max-md:text-sm"
                 value={contentData.title.replace(/^🔒\s*/, "")}
                 onChange={handleChange}
               />
             </td>
           </tr>
           <tr>
-            <th className="border border-gray-400 px-4 py-2 text-white">작성자</th>
-            <td className="border border-gray-400 px-4 py-2 bg-white">
+            <th className="border border-gray-400 px-4 py-2 text-white max-md:px-2 max-md:py-2 max-md:text-sm">
+              작성자
+            </th>
+            <td className="border border-gray-400 px-4 py-2 bg-white max-md:px-2 max-md:py-2 max-md:text-sm">
               {contentData.userName || ""}
             </td>
           </tr>
           <tr>
-            <th className="border border-gray-400 px-4 py-2 text-white">작성일 / 조회수</th>
-            <td className="border border-gray-400 px-4 py-2 bg-white">
+            <th className="border border-gray-400 px-4 py-2 text-white max-md:px-2 max-md:py-2 max-md:text-sm">
+              <span className="hidden sm:inline-block">작성일 / 조회수</span>
+              <span className="sm:hidden inline-block">작성일 <br/>/ 조회수</span>
+            </th>
+            <td className="border border-gray-400 px-4 py-2 bg-white max-md:px-2 max-md:py-2 max-md:text-sm">
               {contentData.createdAt} / {contentData.viewCount}
             </td>
           </tr>
         </thead>
         <tbody>
           <tr className="w-full h-96 flex-auto shadow-md">
-            <td colSpan={2} className="p-4">
+            <td colSpan={2} className="p-4 max-md:p-2">
               <textarea
                 placeholder="질문 내용을 수정하세요."
                 name="content"
-                className="w-full h-96 focus-visible:outline-none resize-none"
+                className="w-full h-96 focus-visible:outline-none resize-none max-md:h-64 max-md:text-sm"
                 maxLength={255}
                 onChange={handleChange}
                 value={contentData.content}
@@ -152,8 +157,8 @@ const QnaEditPage = () => {
           </tr>
         </tbody>
       </table>
-      <div className="mt-4">
-        <label>
+      <div className="mt-4 max-md:mt-6">
+        <label className="max-md:text-sm max-md:block max-md:mb-4">
           <input
             type="checkbox"
             id="secret"
@@ -161,10 +166,10 @@ const QnaEditPage = () => {
           />{" "}
           비밀글
         </label>
-        <div className="flex float-right mb-10">
+        <div className="flex float-right mb-10 max-md:flex max-md:float-none max-md:w-full max-md:mt-2">
           <button
             onClick={handleSubmit}
-            className="text-green-500 hover:text-green-700 text-lg font-semibold px-3 rounded transition"
+            className="text-green-500 hover:text-green-700 text-lg font-semibold px-3 rounded transition max-md:text-base max-md:font-semibold max-md:px-3 max-md:py-2 max-md:w-full max-md:text-right"
           >
             📗 수정하기
           </button>
