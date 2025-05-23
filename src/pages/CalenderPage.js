@@ -23,34 +23,37 @@ const defaultEvents = [
 ];
 
 const CalendarPage = () => {
-  const [events, setEvents] = useState(defaultEvents);
-  const [selectedYear, setSelectedYear] = useState(2025);
-  const [selectedMonth, setSelectedMonth] = useState(4);
+  const currentDate = new Date(); // 현재 날짜 가져오기
 
+  const [events, setEvents] = useState(defaultEvents);
+  // 초기 년/월을 현재 날짜로 설정
+  const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear());
+  const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth() + 1);
+
+  // 컴포넌트 마운트 시 JSON 파일 로드 시도
   useEffect(() => {
     const fetchSchedule = async () => {
       try {
-        const response = await fetch("/schedule.json");
+        const response = await fetch('/schedule.json'); // public 폴더의 파일 경로
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        setEvents(data);
+        setEvents(data); // 성공 시 events 상태 업데이트
       } catch (error) {
-        console.error(
-          "Failed to fetch schedule.json, using default data:",
-          error
-        );
+        console.error("Failed to fetch schedule.json, using default data:", error);
       }
     };
 
     fetchSchedule();
-  }, []);
+  }, []); // 빈 배열: 컴포넌트가 처음 마운트될 때 한 번만 실행
 
+  // --- 달력 계산 헬퍼 함수 ---
   const getDaysInMonth = (year, month) => new Date(year, month, 0).getDate();
   const getFirstDayOfWeek = (year, month) =>
     new Date(year, month - 1, 1).getDay();
 
+  // --- 월 변경 함수 ---
   const changeMonth = (diff) => {
     let newMonth = selectedMonth + diff;
     let newYear = selectedYear;
@@ -65,22 +68,21 @@ const CalendarPage = () => {
     setSelectedMonth(newMonth);
   };
 
+  // --- 달력 셀 생성 ---
   const daysInMonth = getDaysInMonth(selectedYear, selectedMonth);
   const firstDayOfWeek = getFirstDayOfWeek(selectedYear, selectedMonth);
-
   const calendarCells = [];
   for (let i = 0; i < firstDayOfWeek; i++) calendarCells.push(null);
   for (let day = 1; day <= daysInMonth; day++) calendarCells.push(day);
   while (calendarCells.length % 7 !== 0) calendarCells.push(null);
 
+  // --- 날짜 포맷팅 함수 ---
   const formatDate = (year, month, day) =>
     `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 
-  // '방학'인지 확인하는 함수
-  const isVacation = (eventString) =>
-    !!eventString && eventString.includes("방학");
+  // --- 이벤트 관련 헬퍼 함수 ---
+  const isVacation = (eventString) => !!eventString && eventString.includes("방학");
 
-  // *** 수정된 로직: '방학'이 *아닌* 이벤트가 있는지 확인 ***
   const hasNonVacationEvent = (dateStr) => {
     if (!dateStr) return false;
     return events.some(
@@ -88,24 +90,26 @@ const CalendarPage = () => {
     );
   };
 
-  // 해당 날짜에 *어떤* 이벤트라도 있는지 확인 (배경/스타일링용)
   const hasAnyEvent = (dateStr) => {
-    if (!dateStr) return false;
-    return events.some((e) => dateStr >= e.start && dateStr <= e.end);
-  };
+      if (!dateStr) return false;
+      return events.some((e) => dateStr >= e.start && dateStr <= e.end);
+  }
 
+  // --- 월별 이벤트 필터링 (개선된 로직) ---
   const filteredEvents = events
-    .filter(
-      (e) =>
-        e.start.startsWith(
-          `${selectedYear}-${String(selectedMonth).padStart(2, "0")}`
-        ) ||
-        e.end.startsWith(
-          `${selectedYear}-${String(selectedMonth).padStart(2, "0")}`
-        )
-    )
+    .filter((e) => {
+      const eventStart = new Date(e.start);
+      const eventEnd = new Date(e.end);
+      eventEnd.setHours(23, 59, 59, 999);
+
+      const monthStart = new Date(selectedYear, selectedMonth - 1, 1);
+      const monthEnd = new Date(selectedYear, selectedMonth, 0, 23, 59, 59, 999);
+
+      return eventStart <= monthEnd && eventEnd >= monthStart;
+    })
     .sort((a, b) => a.start.localeCompare(b.start));
 
+  // --- 이벤트 기간 포맷팅 함수 ---
   const formatRange = (start, end) => {
     const [sY, sM, sD] = start.split("-");
     const [eY, eM, eD] = end.split("-");
@@ -113,24 +117,16 @@ const CalendarPage = () => {
     return `${sM}.${sD} ~ ${eM}.${eD}`;
   };
 
+  // --- JSX 렌더링 ---
   return (
     <div className="max-w-7xl mx-auto p-6 max-md:p-3">
-      {/* 년도/월 선택 UI (이전과 동일) */}
+      {/* 년도/월 선택 UI */}
       <div className="flex justify-center items-center mb-6 gap-4 max-md:gap-2 max-md:mb-4">
-        <span
-          onClick={() => changeMonth(-1)}
-          className="text-2xl font-bold cursor-pointer hover:text-blue-600 max-md:text-xl"
-        >
-          &lt;
-        </span>
+        <span onClick={() => changeMonth(-1)} className="text-2xl font-bold cursor-pointer hover:text-blue-600 max-md:text-xl">&lt;</span>
         <h1 className="text-4xl font-bold max-md:text-2xl">{selectedYear}</h1>
-        <span
-          onClick={() => changeMonth(1)}
-          className="text-2xl font-bold cursor-pointer hover:text-blue-600 max-md:text-xl"
-        >
-          &gt;
-        </span>
+        <span onClick={() => changeMonth(1)} className="text-2xl font-bold cursor-pointer hover:text-blue-600 max-md:text-xl">&gt;</span>
       </div>
+      {/* 월 선택 탭 */}
       <div className="flex justify-center mb-4 gap-2 text-lg font-semibold max-md:flex-wrap max-md:gap-1 max-md:text-sm max-md:mb-6">
         {[...Array(12)].map((_, i) => (
           <div
@@ -157,24 +153,14 @@ const CalendarPage = () => {
           <div className=" p-1.5 rounded max-md:p-1">
             <div className="grid grid-cols-7 text-center text-sm font-semibold mb-1.5 max-md:text-xs">
               {["일", "월", "화", "수", "목", "금", "토"].map((d) => (
-                <div
-                  key={d}
-                  className="bg-blue-800 text-white py-1 max-md:py-0.5"
-                >
-                  {d}
-                </div>
+                <div key={d} className="bg-blue-800 text-white py-1 max-md:py-0.5">{d}</div>
               ))}
             </div>
             <div className="grid grid-cols-7 gap-1 text-center text-sm max-md:text-xs">
               {calendarCells.map((day, idx) => {
-                const dateStr = day
-                  ? formatDate(selectedYear, selectedMonth, day)
-                  : null;
-
-                // *** 수정된 로직 ***
-                // '방학'이 *아닌* 이벤트가 있을 때만 콩알 표시
-                const showDot = hasNonVacationEvent(dateStr);
-                const _hasAnyEvent = hasAnyEvent(dateStr);
+                const dateStr = day ? formatDate(selectedYear, selectedMonth, day) : null;
+                const showDot = hasNonVacationEvent(dateStr); // 콩알 표시 여부
+                const _hasAnyEvent = hasAnyEvent(dateStr); // 스타일링용
 
                 return (
                   <div
@@ -186,7 +172,6 @@ const CalendarPage = () => {
                     {day && (
                       <>
                         <div>{day}</div>
-                        {/* showDot이 true일 때만 콩알 렌더링 */}
                         {showDot && (
                           <span className="w-1.5 h-1.5 bg-blue-900 rounded-full mt-1 max-md:w-1 max-md:h-1"></span>
                         )}
@@ -199,7 +184,7 @@ const CalendarPage = () => {
           </div>
         </div>
 
-        {/* 일정 리스트 (이전과 동일) */}
+        {/* 일정 리스트 */}
         <div className="w-1/2 border rounded p-5 text-[17px] leading-7 max-md:w-full max-md:p-4 max-md:text-sm">
           <h2 className="text-xl font-bold mb-4 max-md:text-lg">📌 일정</h2>
           {filteredEvents.length === 0 ? (

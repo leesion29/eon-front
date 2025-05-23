@@ -3,13 +3,13 @@
     "start": "2025-01-22",
     "end": "2025-01-22",
     "event": "입학식",
-    "color": "bg-red-100"
+    "color": "bg-yellow-100"
   },
   {
     "start": "2025-01-25",
     "end": "2025-01-25",
     "event": "신입생 등록",
-    "color": "bg-red-100"
+    "color": "bg-green-100"
   },
   {
     "start": "2025-02-03",
@@ -21,7 +21,7 @@
     "start": "2025-02-11",
     "end": "2025-02-12",
     "event": "예비 수강신청",
-    "color": "bg-red-100"
+    "color": "bg-blue-100"
   },
   {
     "start": "2025-02-26",
@@ -33,13 +33,13 @@
     "start": "2025-03-01",
     "end": "2025-03-01",
     "event": "신입생 OT",
-    "color": "bg-red-100"
+    "color": "bg-yellow-100"
   },
   {
     "start": "2025-03-03",
     "end": "2025-03-07",
     "event": "개강 및 수강정정 기간",
-    "color": "bg-red-100"
+    "color": "bg-orange-100"
   },
   {
     "start": "2025-04-01",
@@ -68,8 +68,8 @@
   {
     "start": "2025-05-20",
     "end": "2025-05-22",
-    "event": "1학기 성적 이의 신청",
-    "color": "bg-gray-100"
+    "event": "성적 이의 신청",
+    "color": "bg-cyan-100"
   },
   {
     "start": "2025-06-16",
@@ -105,7 +105,7 @@
     "start": "2025-09-01",
     "end": "2025-09-01",
     "event": "2학기 개강",
-    "color": "bg-blue-100"
+    "color": "bg-orange-100"
   },
   {
     "start": "2025-09-03",
