@@ -161,28 +161,19 @@ const MainPage = () => {
     if (userId) fetchSchedule();
   }, [userId, userRole]);
 
-  // 학사일정 JSON 로드 useEffect (디버깅 로그 추가)
+  // 학사일정 JSON 로드
   useEffect(() => {
     const fetchCalendarEvents = async () => {
-      console.log("MainPage: Trying to fetch /schedule.json..."); // 로그 추가
       try {
         const response = await fetch("/schedule.json");
-        console.log("MainPage: Fetch response status:", response.status); // 로그 추가
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log(
-          "MainPage: Successfully fetched schedule.json. Data:",
-          data
-        ); // 로그 추가
         setCalendarEvents(data);
       } catch (error) {
         console.error(
-          // 에러 로그 강화
-          "!!!!!!!! MainPage: Failed to fetch schedule.json, using dummy data. Error:",
-          error
-        );
+          "Failed to fetch schedule.json, using dummy data. Error:",error);
       }
     };
     fetchCalendarEvents();

@@ -18,6 +18,7 @@ const GradePage = () => {
   useEffect(() => {
     const localId = localStorage.getItem("id");
     if (!userId && localId) {
+
       dispatch(setUserIdAction(localId));
       loadAllData();
     } else if (userId) {
@@ -26,6 +27,9 @@ const GradePage = () => {
   }, [userId, dispatch]);
 
   const loadAllData = async () => {
+    if (!userId) {
+        return;
+    }
     try {
       const [gradesRes, recordRes] = await Promise.all([
         fetchStudentGrades(),
@@ -33,7 +37,7 @@ const GradePage = () => {
       ]);
       setGrades(gradesRes.data);
       setRecord(recordRes.data);
-    } catch {
+    } catch (error) {
       setMessage("성적 정보를 불러올 수 없습니다.");
     }
   };
@@ -53,16 +57,28 @@ const GradePage = () => {
 
   useEffect(() => {
     const fetchCourseList = async () => {
-      if (userId) {
+      if (!userId) {
+        setCourseList([]);
+        return;
+      }
+      try {
         const data = await getList(userId);
-        setCourseList(data);
+        setCourseList(data || []);
+      } catch (error) {
+        setCourseList([]);
       }
     };
 
     const fetchStatus = async () => {
-      if (userId) {
+      if (!userId) {
+        setEvaluationStatus([]);
+        return;
+      }
+      try {
         const data = await getStatus(userId);
-        setEvaluationStatus(data);
+        setEvaluationStatus(data || []);
+      } catch (error) {
+        setEvaluationStatus([]);
       }
     };
 
@@ -72,18 +88,36 @@ const GradePage = () => {
       setIsLoadingEval(false);
     };
 
-    if (userId) fetchAll();
+    if (userId) {
+      fetchAll();
+    } else {
+      setIsLoadingEval(false);
+      setCourseList([]);
+      setEvaluationStatus([]);
+    }
   }, [userId]);
 
   useEffect(() => {
     if (!isLoadingEval && courselist && courselist.length > 0 && evaluationStatus && evaluationStatus.length > 0) {
       const isNotEvaluated = courselist.some(
-        (course) =>
-          !evaluationStatus.some(
-            (e) => e.classId === course.classId && e.studentId === userId
-          )
+        (course) => {
+          const evaluationFound = evaluationStatus.some(
+            (e) => e.classId === course.classId && e.studentId === userId // Direct string comparison
+          );
+          return !evaluationFound;
+        }
       );
       setIsModalOpen(isNotEvaluated);
+    } else {
+      if (!isLoadingEval && courselist && courselist.length === 0) {
+        setIsModalOpen(false);
+      }
+
+      else if (!isLoadingEval && courselist && courselist.length > 0 && (!evaluationStatus || evaluationStatus.length === 0)) {
+        setIsModalOpen(true);
+      } else if (!isLoadingEval) {
+        setIsModalOpen(false);
+      }
     }
   }, [courselist, evaluationStatus, userId, isLoadingEval]);
 
