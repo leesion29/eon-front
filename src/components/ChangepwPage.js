@@ -38,9 +38,10 @@ const ChangepwPage = () => {
       );
 
       setMessage("☑️ 비밀번호가 성공적으로 변경되었습니다.");
-      setTimeout(() => {
-        navigate("/main/profile");
-      }, 1500);
+      // 배포한 사이트의 로컬보다 반응 속도가 느려, 버그 유발할 수 있으므로 주석 처리
+      // setTimeout(() => {
+      //   navigate("/main/profile");
+      // }, 1500);
     } catch (error) {
       setMessage("비밀번호 변경에 실패했습니다. 현재 비밀번호를 확인하세요.");
     }

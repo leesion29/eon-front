@@ -203,7 +203,7 @@ const LeavePage = () => {
                     <td className="hidden md:table-cell py-2 px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">
                       {l.approvedDate || "-"}
                     </td>
-                    <td className="hidden md:table-cell py-2 px-1 md:py-3 md:px-6 align-middle text-left break-words">
+                    <td className="hidden md:table-cell py-2 px-1 md:py-3 md:px-6 align-middle text-center break-words">
                       {l.denialReason || "-"}
                     </td>
                   </tr>
@@ -211,8 +211,8 @@ const LeavePage = () => {
               ) : (
                 <tr className="border-t">
                   <td
-                    colSpan={6}
-                    className="md:col-span-8 py-2.5 sm:py-3 md:py-4 text-gray-400 text-[8px] sm:text-[9px] md:text-xs"
+                    colSpan={8}
+                    className="py-2.5 sm:py-3 md:py-4 text-gray-400 text-[8px] sm:text-[9px] md:text-xs"
                   >
                     휴학 신청 내역이 없습니다.
                   </td>
@@ -289,7 +289,7 @@ const LeavePage = () => {
                     <td className="hidden md:table-cell py-2 px-1 md:py-3 md:px-6 align-middle whitespace-nowrap">
                       {r.approvedDate || "-"}
                     </td>
-                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle text-left break-words">
+                    <td className="py-1.5 px-0.5 sm:py-2 sm:px-1 md:py-3 md:px-6 align-middle text-center break-words">
                       {r.denialReason || "-"}
                     </td>
                   </tr>
@@ -297,8 +297,8 @@ const LeavePage = () => {
               ) : (
                 <tr className="border-t">
                   <td
-                    colSpan={4}
-                    className="md:col-span-6 py-2.5 sm:py-3 md:py-4 text-gray-400 text-[8px] sm:text-[9px] md:text-xs"
+                    colSpan={8}
+                    className="py-2.5 sm:py-3 md:py-4 text-gray-400 text-[8px] sm:text-[9px] md:text-xs"
                   >
                     복학 신청 내역이 없습니다.
                   </td>

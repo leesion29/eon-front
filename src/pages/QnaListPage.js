@@ -116,7 +116,8 @@ const QnaListPage = () => {
       </h1>
       {keyword && (
         <p className="text-[10px] sm:text-xs md:text-sm text-center text-gray-600 mb-2 sm:mb-3 md:mb-4">
-          🔍 "<span className="font-semibold">{keyword}</span>" 관련 검색 결과입니다.
+          🔍 "<span className="font-semibold">{keyword}</span>" 관련 검색
+          결과입니다.
         </p>
       )}
       <div className="flex flex-col sm:flex-row sm:justify-end items-center mb-3 sm:mb-4 md:mb-5 gap-1.5 sm:gap-2">
@@ -144,30 +145,38 @@ const QnaListPage = () => {
       )}
       <hr className="my-2 sm:my-3 md:my-4" />
 
-      <div className="w-full overflow-x-auto"> {/* 모바일에서만 스크롤이 필요할 경우를 대비해 overflow-x-auto 유지 */}
-        <table className="w-full border-collapse table-fixed"> {/* PC에서는 table-fixed 유지, 모바일은 아래 colgroup으로 너비 제어 */}
+      <div className="w-full overflow-x-auto">
+        <table className="w-full border-collapse table-fixed">
           <colgroup>
-            {/* 모바일에서는 매우 작은 너비, sm 이상에서 PC에 맞는 너비로 복원 */}
-            <col className="w-[10%] sm:w-[8%] md:w-[7%] lg:w-[6%]" /> {/* 번호 */}
-            <col className="w-[35%] sm:w-auto" />                         {/* 제목 - PC에서는 auto로 유동적 */}
-            <col className="w-[15%] sm:w-[15%] md:w-[15%] lg:w-[12%]" /> {/* 작성자 */}
-            <col className="w-[20%] sm:w-[20%] md:w-[15%]" />             {/* 작성일 */}
-            <col className="w-[10%] sm:w-[12%] md:w-[10%] lg:w-[8%]" />  {/* 조회수 */}
-            <col className="w-[10%] sm:w-[10%] md:w-[10%] lg:w-[8%]" />  {/* 상태 */}
+            <col className="w-[10%] sm:w-[8%] md:w-[7%] lg:w-[6%]" />
+            <col className="w-[35%] sm:w-auto" />
+            <col className="w-[15%] sm:w-[15%] md:w-[15%] lg:w-[12%]" />
+            <col className="w-[20%] sm:w-[20%] md:w-[15%]" />
+            <col className="w-[10%] sm:w-[12%] md:w-[10%] lg:w-[8%]" />
+            <col className="w-[10%] sm:w-[10%] md:w-[10%] lg:w-[8%]" />
           </colgroup>
-          {/* 모바일 폰트 크기 text-[8px], sm 이상에서 PC 폰트 크기로 복원 */}
           <thead className="bg-blue-800 text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm">
             <tr>
-              {/* 모바일 패딩 px-0.5 py-0.5, sm 이상에서 PC 패딩으로 복원 */}
-              <th className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-1.5 md:px-2 text-center font-normal sm:font-medium whitespace-nowrap">번호</th>
-              <th className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-1.5 md:px-2 text-center font-normal sm:font-medium whitespace-nowrap">제목</th>
-              <th className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-1.5 md:px-2 text-center font-normal sm:font-medium whitespace-nowrap">작성자</th>
-              <th className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-1.5 md:px-2 text-center font-normal sm:font-medium whitespace-nowrap">작성일</th>
-              <th className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-1.5 md:px-2 text-center font-normal sm:font-medium whitespace-nowrap">조회수</th>
-              <th className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-1.5 md:px-2 text-center font-normal sm:font-medium whitespace-nowrap">상태</th>
+              <th className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-1.5 md:px-2 text-center font-normal sm:font-medium whitespace-nowrap">
+                번호
+              </th>
+              <th className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-1.5 md:px-2 text-center font-normal sm:font-medium whitespace-nowrap">
+                제목
+              </th>
+              <th className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-1.5 md:px-2 text-center font-normal sm:font-medium whitespace-nowrap">
+                작성자
+              </th>
+              <th className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-1.5 md:px-2 text-center font-normal sm:font-medium whitespace-nowrap">
+                작성일
+              </th>
+              <th className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-1.5 md:px-2 text-center font-normal sm:font-medium whitespace-nowrap">
+                조회수
+              </th>
+              <th className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-1.5 md:px-2 text-center font-normal sm:font-medium whitespace-nowrap">
+                상태
+              </th>
             </tr>
           </thead>
-          {/* 모바일 폰트 크기 text-[8px], sm 이상에서 PC 폰트 크기로 복원 */}
           <tbody className="text-[8px] sm:text-[10px] md:text-xs lg:text-sm">
             {currentItem.length > 0 ? (
               currentItem.map((qna, i) => {
@@ -182,48 +191,92 @@ const QnaListPage = () => {
                     key={qna.questionId || i}
                     className={`${rowClass} border-b border-gray-300`}
                   >
-                    {/* 모바일 패딩 px-0.5 py-0.5, sm 이상에서 PC 패딩으로 복원 */}
-                    <td className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-2 md:px-2 text-center align-middle">{firstItem + i + 1}</td>
+                    <td className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-2 md:px-2 text-center align-middle">
+                      {firstItem + i + 1}
+                    </td>
                     <td className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-2 md:px-2 text-left align-middle break-words">
                       {isSecret ? (
                         <p
                           className="text-gray-500 hover:text-gray-700 cursor-pointer flex items-center"
                           onClick={async () => {
                             let writerId = await fetchWriterId(qna.questionId);
-                            const target = { questionId: qna.questionId, page: currentPage, keyword: keyword };
+                            const target = {
+                              questionId: qna.questionId,
+                              page: currentPage,
+                              keyword: keyword,
+                            };
                             if (String(userId) === String(writerId)) {
-                              setAlertData("success", "본인 확인 완료! 글을 조회합니다.", target);
+                              setAlertData(
+                                "success",
+                                "본인 확인 완료! 글을 조회합니다.",
+                                target
+                              );
                             } else if (userRole !== "STUDENT") {
-                              setAlertData("success", "권한 확인 완료! 글을 조회합니다.", target);
+                              setAlertData(
+                                "success",
+                                "권한 확인 완료! 글을 조회합니다.",
+                                target
+                              );
                             } else {
-                              setAlertData("error", "읽을 수 있는 권한이 없습니다.");
+                              setAlertData(
+                                "error",
+                                "읽을 수 있는 권한이 없습니다."
+                              );
                             }
                           }}
                         >
-                          {qna.title}
+                          🔒 비밀글입니다.
                         </p>
                       ) : (
                         <Link
                           to="/main/qnadata"
-                          state={{ questionId: qna.questionId, page: currentPage, keyword: keyword }}
+                          state={{
+                            questionId: qna.questionId,
+                            page: currentPage,
+                            keyword: keyword,
+                          }}
                           className="hover:text-blue-600"
                         >
                           {qna.title}
                         </Link>
                       )}
                     </td>
-                    <td className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-2 md:px-2 text-center align-middle break-words sm:break-keep sm:overflow-hidden sm:whitespace-nowrap sm:text-ellipsis">{qna.userName || "익명"}</td>
-                    <td className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-2 md:px-2 text-center align-middle whitespace-nowrap">{qna.createdAt}</td>
-                    <td className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-2 md:px-2 text-center align-middle">{qna.viewCount}</td>
-                    <td className={`py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-2 md:px-2 text-center align-middle whitespace-nowrap ${ qna.status === "미답변" ? "text-red-500" : "text-black" }`}>
-                      {qna.status}
+                    <td className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-2 md:px-2 text-center align-middle break-words sm:break-keep sm:overflow-hidden sm:whitespace-nowrap sm:text-ellipsis">
+                      {qna.userName || "익명"}
+                    </td>
+                    <td className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-2 md:px-2 text-center align-middle whitespace-nowrap">
+                      {qna.createdAt}
+                    </td>
+                    <td className="py-0.5 px-0.5 sm:py-1 sm:px-1.5 md:py-2 md:px-2 text-center align-middle">
+                      {qna.viewCount}
+                    </td>
+                    <td
+                      className={`py-0.5 px-0.5 sm:text-xs sm:py-1 sm:px-1.5 md:text-sm md:py-2 md:px-2 text-center align-middle break-words ${
+                        qna.status === "미답변" ? "text-red-500" : "text-black"
+                      }`}
+                    >
+                      {qna.status === "답변완료" ? (
+                        <>
+                          {/* 모바일용 */}
+                          <span className="sm:hidden">
+                            완료
+                          </span>
+                          {/* 웹용 */}
+                          <span className="hidden sm:inline">{qna.status}</span>
+                        </>
+                      ) : (
+                        qna.status
+                      )}
                     </td>
                   </tr>
                 );
               })
             ) : (
               <tr>
-                <td colSpan={6} className="text-center text-gray-500 py-4 sm:py-6 md:py-8 text-[9px] sm:text-xs">
+                <td
+                  colSpan={6}
+                  className="text-center text-gray-500 py-4 sm:py-6 md:py-8 text-[9px] sm:text-xs"
+                >
                   {message || "Q&A가 없습니다."}
                 </td>
               </tr>

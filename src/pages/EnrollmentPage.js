@@ -299,7 +299,8 @@ const EnrollmentPage = () => {
               <th className="py-0.5 px-px sm:p-0.5 md:py-3 md:px-2 whitespace-nowrap">강의번호</th>
               <th className="py-0.5 px-px sm:p-0.5 md:py-3 md:px-2">과목명</th>
               <th className="py-0.5 px-px sm:p-0.5 md:py-3 md:px-2">구분</th>
-              <th className="hidden md:table-cell py-0.5 px-px sm:p-0.5 md:py-3 md:px-2">개설학과</th>
+              {/* 주석 - 어차피 본인의 학과만 보이기 때문에 반드시 표기될 필요는 없을 것 같으므로 개설학과를 안보이게 처리 */}
+              <th className="hidden py-0.5 px-px sm:p-0.5 md:py-3 md:px-2">개설학과</th>
               <th className="hidden sm:table-cell py-0.5 px-px sm:p-0.5 md:py-3 md:px-2">학년</th>
               <th className="py-0.5 px-px sm:p-0.5 md:py-3 md:px-2">학점</th>
               <th className="py-0.5 px-px sm:p-0.5 md:py-3 md:px-2">요일</th>
@@ -313,7 +314,7 @@ const EnrollmentPage = () => {
           <tbody className="text-center text-gray-900">
             {courses.dtoList.length === 0 ? (
               <tr>
-                <td colSpan={7} className="md:col-span-12 py-2 sm:py-3 md:py-4 text-gray-400 text-[7px] sm:text-[8px] md:text-xs">
+                <td colSpan={12} className="md:col-span-12 py-2 sm:py-3 md:py-4 text-gray-400 text-[7px] sm:text-[8px] md:text-xs">
                   검색 결과가 없습니다.
                 </td>
               </tr>
@@ -321,9 +322,10 @@ const EnrollmentPage = () => {
               courses.dtoList.map((course) => (
                 <tr key={course.강의번호} className="hover:bg-gray-50 border-t">
                   <td className="py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle break-all">{course.강의번호}</td>
-                  <td className="py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle text-left break-words">{course.강의명}</td>
+                  <td className="py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle text-center break-words">{course.강의명}</td>
                   <td className="py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle break-all">{course.구분}</td>
-                  <td className="hidden md:table-cell py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle break-words">{course.개설학과}</td>
+                  {/* 개설학과 필요하다면 md:table-cell를 양쪽에 추가하면 됨 */}
+                  <td className="hidden py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle">{course.개설학과}</td>
                   <td className="hidden sm:table-cell py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle">{course.강의학년}학년</td>
                   <td className="py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle">{course.강의학점}</td>
                   <td className="py-1 px-px sm:p-0.5 md:py-2 md:px-2 align-middle">{course.강의요일}</td>

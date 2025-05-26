@@ -23,7 +23,7 @@ export const getList = async (id) => {
       `${prefix}/courselist?studentId=${id}`,
       getAuthHeader()
     );
-    console.log(res.data);
+    // console.log(res.data);
     return res.data;
   } catch (error) {
     console.log("평가 대상을 불러올 수 없습니다!", error);
@@ -90,7 +90,7 @@ export const findAnswer = async (evaluationId) => {
       ...auth,
       params: { evaluationId },
     });
-    console.log(res.data);
+    // console.log(res.data);
     return res.data;
   } catch (error) {
     console.log("평가 내용 데이터를 불러올 수 없습니다!", error);

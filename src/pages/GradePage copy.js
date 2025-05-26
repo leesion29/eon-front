@@ -19,14 +19,15 @@ const GradePage = () => {
     const localId = localStorage.getItem("id");
     if (!userId && localId) {
       dispatch(setUserIdAction(localId));
-      loadAllData();
+
     } else if (userId) {
       loadAllData();
     }
-  }, [userId, dispatch]);
+  }, [userId, dispatch]); 
 
   const loadAllData = async () => {
     try {
+      setMessage(""); 
       const [gradesRes, recordRes] = await Promise.all([
         fetchStudentGrades(),
         fetchStudentRecord(),
@@ -35,6 +36,8 @@ const GradePage = () => {
       setRecord(recordRes.data);
     } catch {
       setMessage("성적 정보를 불러올 수 없습니다.");
+      setGrades([]);
+      setRecord(null);
     }
   };
 
@@ -53,16 +56,24 @@ const GradePage = () => {
 
   useEffect(() => {
     const fetchCourseList = async () => {
-      if (userId) {
+      if (!userId) return; 
+      try {
         const data = await getList(userId);
         setCourseList(data);
+      } catch (error) {
+        console.error("Error fetching course list:", error);
+        setCourseList([]);
       }
     };
 
     const fetchStatus = async () => {
-      if (userId) {
+      if (!userId) return; 
+      try {
         const data = await getStatus(userId);
         setEvaluationStatus(data);
+      } catch (error) {
+        console.error("Error fetching evaluation status:", error);
+        setEvaluationStatus([]);
       }
     };
 
@@ -76,14 +87,16 @@ const GradePage = () => {
   }, [userId]);
 
   useEffect(() => {
-    if (!isLoadingEval && courselist && courselist.length > 0 && evaluationStatus && evaluationStatus.length > 0) {
+    if (!isLoadingEval && userId && courselist && courselist.length > 0 && evaluationStatus) {
       const isNotEvaluated = courselist.some(
         (course) =>
           !evaluationStatus.some(
-            (e) => e.classId === course.classId && e.studentId === userId
+            (e) => e.classId === course.classId && e.studentId === parseInt(userId) 
           )
       );
       setIsModalOpen(isNotEvaluated);
+    } else if (!isLoadingEval && userId && courselist && courselist.length === 0) {
+      setIsModalOpen(false);
     }
   }, [courselist, evaluationStatus, userId, isLoadingEval]);
 

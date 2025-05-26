@@ -54,21 +54,67 @@ const UserInfo = () => {
           ? allSemesters.find((s) => s.semesterId === latestLeave.expectedSemester)
           : null;
 
-        const isExpectedSemesterAfterCurrent = expectedSemesterDetail && (
+        const isExpectedSemesterStillFuture = expectedSemesterDetail && (
           expectedSemesterDetail.year > currentSemester.year ||
           (expectedSemesterDetail.year === currentSemester.year &&
             expectedSemesterDetail.term === "SECOND" &&
             currentSemester.term === "FIRST")
         );
 
-        const isOnLeave =
-          latestLeave &&
-          latestLeave.status === "승인" &&
-          isExpectedSemesterAfterCurrent;
+        let finalAcademicStatus = statusRes.data.status || "ENROLLED"; // 기본값은 백엔드에서 받은 값 또는 재학
+
+        if (latestLeave && latestLeave.status === "승인") {
+          if (isExpectedSemesterStillFuture) {
+            // 아직 휴학 기간 중이어야 함
+            let hasReturnedEffectively = false;
+            if (latestReturn && latestReturn.status === "승인") {
+              const returnSemesterInfo = allSemesters.find(s => s.semesterId === latestReturn.semester);
+              if (returnSemesterInfo && (
+                returnSemesterInfo.year < currentSemester.year ||
+                (returnSemesterInfo.year === currentSemester.year && (
+                    returnSemesterInfo.term === currentSemester.term ||
+                    (currentSemester.term === "SECOND" && returnSemesterInfo.term === "FIRST")
+                ))
+              )) {
+                hasReturnedEffectively = true;
+              }
+            }
+            if (!hasReturnedEffectively) {
+              finalAcademicStatus = "LEAVE";
+            } else {
+              // 휴학 기간 중이지만, 유효한 복학 기록이 있으면 백엔드 상태 그대로
+              finalAcademicStatus = statusRes.data.status || "ENROLLED";
+            }
+          } else {
+            // 휴학으로 인한 예상 복학 시기가 도래했거나 지난 경우
+            let hasReturnedEffectively = false;
+            if (latestReturn && latestReturn.status === "승인") {
+              const returnSemesterInfo = allSemesters.find(s => s.semesterId === latestReturn.semester);
+              if (returnSemesterInfo && (
+                returnSemesterInfo.year < currentSemester.year ||
+                (returnSemesterInfo.year === currentSemester.year && (
+                    returnSemesterInfo.term === currentSemester.term ||
+                    (currentSemester.term === "SECOND" && returnSemesterInfo.term === "FIRST")
+                ))
+              )) {
+                hasReturnedEffectively = true;
+              }
+            }
+
+            if (hasReturnedEffectively) {
+              finalAcademicStatus = "ENROLLED";
+            } else {
+              finalAcademicStatus = "LEAVE"; // 복학 신청/승인 없이는 휴학 상태 유지
+            }
+          }
+        } else {
+          // 승인된 휴학 기록이 없는 경우, 백엔드에서 제공하는 현재 학적 상태를 사용
+          finalAcademicStatus = statusRes.data.status || "ENROLLED";
+        }
 
         const statusPayload = {
           ...statusRes.data,
-          status: isOnLeave ? "LEAVE" : "ENROLLED",
+          status: finalAcademicStatus,
         };
 
         setStatusInfo(statusPayload);

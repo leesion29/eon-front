@@ -39,7 +39,7 @@ function FindpwPage() {
     userEmail: "",
   });
 
-  const [message, setMessage] = useState(""); // ✅ 메시지 상태 추가
+  const [message, setMessage] = useState(""); // 메시지 상태 추가
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {

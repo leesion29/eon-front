@@ -102,7 +102,7 @@ const NoticeListPage = () => {
         />
         <button
           onClick={handleSearch}
-          className="px-1.5 py-0.5 text-[9px] sm:px-2 sm:py-1 sm:text-[10px] md:text-xs w-full sm:w-auto whitespace-nowrap bg-blue-600 hover:bg-blue-700 text-white rounded shadow-sm font-semibold"
+          className="px-3 py-1 w-full text-[10px] sm:text-xs md:text-sm sm:w-auto whitespace-nowrap bg-blue-600 hover:bg-blue-700 text-white rounded shadow-sm font-semibold"
         >
           검색 🔍
         </button>
