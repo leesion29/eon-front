@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -46,6 +46,22 @@ const ChangepwPage = () => {
       setMessage("비밀번호 변경에 실패했습니다. 현재 비밀번호를 확인하세요.");
     }
   };
+
+  /* 테스트 아이디 권한 제약을 위한 코드 추가 */
+
+  // 테스트 유저 여부 체크를 위한 상수 선언
+  const yourUserId = useSelector((state) => state.auth.userId) || "000000000";
+  const [isTester, setIstester] = useState(true);
+  useEffect(()=>{
+    if(yourUserId == "000000000" || yourUserId == "100000001" || yourUserId == "210000000"){
+      setIstester(true);
+      console.log("테스트 유저", isTester);
+      setMessage("테스트 유저로 접속하셨습니다. 비밀번호 변경이 제한됩니다.");
+    } else {
+      setIstester(false);
+      console.log("일반 유저", isTester)
+    }
+  }, [])
 
   return (
     <div className="flex justify-center items-start min-h-screen py-24">
@@ -137,8 +153,8 @@ const ChangepwPage = () => {
             <p className="text-sm text-center text-red-600">{message}</p>
           )}
           <button
-            type="submit"
-            className="w-full bg-blue-400 hover:bg-blue-800 text-white py-3 rounded font-semibold"
+            type={`${!isTester ? "submit" : "button"}`}
+            className={`w-full text-white py-3 rounded font-semibold ${!isTester ? 'bg-blue-400 hover:bg-blue-800' : 'bg-gray-400 cursor-not-allowed'}`}
           >
             비밀번호 변경
           </button>

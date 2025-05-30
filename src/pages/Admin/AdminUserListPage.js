@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAllUsers, deleteUser } from "../../api/adminUserApi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { showModal } from "../../slices/modalSlice";
 import PageComponent from "../../components/PageComponent";
 import BaseModal from "../../components/BaseModal";
@@ -8,6 +8,7 @@ import AdminUserCreatePage from "./AdminUserCreatePage";
 import AdminUserEditPage from "./AdminUserEditPage";
 import useConfirmModal from "../../hooks/useConfirmModal";
 import AdminUserMultiUploadPage from "./AdminUserMultiUploadPage";
+
 
 const AdminUserListPage = () => {
   const dispatch = useDispatch();
@@ -123,29 +124,49 @@ const AdminUserListPage = () => {
     }
   };
 
+  /* 테스트 아이디 권한 제약을 위한 코드 추가 */
+
+  // 테스트 유저 여부 체크를 위한 상수 선언
+  const yourUserId = useSelector((state) => state.auth.userId) || "000000000";
+  const [isTester, setIstester] = useState(true);
+  useEffect(()=>{
+    if(yourUserId == "000000000"){
+      setIstester(true);
+      console.log("테스트 유저", isTester);
+    } else {
+      setIstester(false);
+      console.log("일반 유저", isTester)
+    }
+  }, [])
   return (
     <div className="w-3/5 mx-auto sm:w-full mt-4 sm:mt-6 md:mt-10">
       <div className="w-full sm:max-w-5xl sm:mx-auto px-2 py-3 sm:px-4 sm:py-6 md:px-6 md:py-8 bg-white shadow-md rounded-md mb-8">
+        {/* 테스터인 경우, 안내 메시지 추가 */}
+        <p className={`text-red-500 sm:text-right pb-3 sm:text-base text-xs ${!isTester ? 'hidden' : ''}`}>테스트 유저로 접속하셨습니다. 일부 권한이 제한됩니다.</p>
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b pb-3 mb-4 sm:mb-6">
+          {/* 테스트 유저인 경우, 등록 버튼 비활성화 */}
           <h2 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-2 sm:mb-0">
             사용자 관리
           </h2>
           <div className="flex flex-col sm:flex-row gap-2 mt-2 sm:mt-0">
             <button
-              onClick={() => setIsModalOpen(true)}
-              className="w-full sm:w-auto px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-700 text-white rounded hover:bg-blue-800 transition text-sm"
-            >
+              onClick={() => {if(!isTester){
+               setIsModalOpen(true) 
+              }}}
+              className={`w-full sm:w-auto px-3 py-1.5 sm:px-4 sm:py-2 text-white rounded ${!isTester ? 'bg-blue-700 hover:bg-blue-800' : 'bg-gray-400 cursor-not-allowed'} transition text-sm`
+            }>
               사용자 등록
             </button>
             <button
-              onClick={() => setIsMultiUploadModalOpen(true)}
-              className="w-full sm:w-auto px-3 py-1.5 sm:px-4 sm:py-2 bg-yellow-600 text-white rounded hover:bg-yellow-800 transition text-sm"
-            >
+              onClick={() => {if(!isTester){
+               setIsMultiUploadModalOpen(true) 
+              }}}
+              className={`w-full sm:w-auto px-3 py-1.5 sm:px-4 sm:py-2 text-white rounded transition text-sm ${!isTester ? 'bg-yellow-600 hover:bg-yellow-800' : 'bg-gray-400 cursor-not-allowed'}`
+          }>
               일괄 등록
             </button>
           </div>
         </div>
-
         <div className="flex justify-end mb-4 sm:mb-6">
           <input
             type="text"
@@ -183,7 +204,6 @@ const AdminUserListPage = () => {
               {users.dtoList.length === 0 ? (
                 <tr className="block sm:table-row w-full">
                   
-                  {/* sm:table-row ensures it doesn't break table structure on desktop if empty */}
                   <td
                     colSpan={tableHeaders.length}
                     className="block sm:table-cell py-6 text-center text-gray-400 text-xs sm:text-sm w-full"
@@ -229,7 +249,7 @@ const AdminUserListPage = () => {
                             {renderUserValue(user, header)}
                           </span>
                         ) : (
-                          <div className="flex flex-row items-center justify-start space-x-1 sm:justify-center sm:space-x-1 pt-0.5 sm:pt-0">
+                          <div className={`flex flex-row items-center justify-start space-x-1 sm:justify-center sm:space-x-1 pt-0.5 sm:pt-0 ${!isTester ? '' : 'hidden'}`}>
                             <button
                               onClick={() => setEditUser(user)}
                               className="w-14 sm:w-auto text-white bg-green-600 px-2 py-1 rounded hover:bg-green-700 text-xs"

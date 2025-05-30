@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { loginPostAsync } from "../../slices/authSlice";
+import { loginPostAsync, setUserId } from "../../slices/authSlice";
 import { findUserId, findUserPw } from "../../api/memberApi";
+import BaseModal from "../../components/BaseModal";
 
 const images = [
   "/images/Eon10.jpg",
@@ -119,6 +120,17 @@ function LoginPage() {
     }
   };
 
+  const [accountModal, setAccountModal] = useState(true);
+
+  const handleTestUserLogin = (id) => {
+  setUser({
+    ...user,
+    userId: id,
+    userPassword: "test",
+  });
+  setAccountModal(false);
+};
+
   return (
     <div className="relative w-screen h-screen overflow-hidden">
       <div className="absolute top-0 left-0 w-screen h-screen z-0">
@@ -134,7 +146,6 @@ function LoginPage() {
         <div className="absolute inset-0 bg-black bg-opacity-40 z-10" />
       </div>
 
-      {/* Logo and University Name - Adjusted for smaller screens */}
       <div className="fixed top-4 left-4 sm:top-8 sm:left-8 z-20">
         <div className="flex items-center space-x-2 sm:space-x-4">
           <img
@@ -149,7 +160,6 @@ function LoginPage() {
         </div>
       </div>
 
-      {/* Left-side Motivational Text - Using existing xl:block logic, ensures it's hidden on smaller screens */}
       <div className="fixed left-8 sm:left-16 md:left-24 lg:left-32 top-1/2 transform -translate-y-1/2 z-10 hidden xl:block">
         <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-relaxed text-white text-opacity-90">
           <span className="block">기술이 아닌,</span>
@@ -159,7 +169,6 @@ function LoginPage() {
         </p>
       </div>
 
-      {/* Login Form Container - Centered on small screens, right-aligned on md and up */}
       <div className="absolute inset-0 flex items-center justify-center md:justify-end p-4 md:p-0 md:pr-16 lg:pr-24 xl:pr-32 z-30">
         <div className="w-full max-w-md bg-white bg-opacity-90 p-4 sm:p-6 rounded-lg shadow-md">
           <h2 className="text-left text-2xl sm:text-3xl font-bold text-blue-900 mb-6 sm:mb-8">
@@ -186,7 +195,6 @@ function LoginPage() {
               </li>
             </ul>
 
-            {/* Tab underline: Reverted to w-full left-0 for narrow, specific style for sm and up */}
             <div
               className="absolute top-full h-0.5 bg-blue-800 z-0 w-full left-0 sm:w-72 sm:left-[108px]"
             />
@@ -409,6 +417,34 @@ function LoginPage() {
             </button>
           </div>
         </div>
+      )}
+
+      {accountModal && (
+        <BaseModal isOpen={accountModal} onClose={() => setAccountModal(false)}>
+          <div className="text-center">
+            <img src="/images/test_account_modal.png" alt="Test Accounts" className="mx-auto mb-6 rounded-lg w-full max-w-xs" />
+            <div className="space-y-3 px-4 pb-4">
+              <button
+                onClick={() => handleTestUserLogin("000000000")}
+                className="w-full bg-indigo-500 text-white py-2 rounded hover:bg-indigo-700 text-sm sm:text-base"
+              >
+                관리자 테스트
+              </button>
+              <button
+                onClick={() => handleTestUserLogin("100000001")}
+                className="w-full bg-teal-500 text-white py-2 rounded hover:bg-teal-700 text-sm sm:text-base"
+              >
+                교수 테스트
+              </button>
+              <button
+                onClick={() => handleTestUserLogin("210000000")}
+                className="w-full bg-amber-500 text-white py-2 rounded hover:bg-amber-700 text-sm sm:text-base"
+              >
+                학생 테스트
+              </button>
+            </div>
+          </div>
+        </BaseModal>
       )}
     </div>
   );
