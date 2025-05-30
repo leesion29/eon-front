@@ -227,14 +227,14 @@ const AdminDepartmentPage = () => {
                         <div className="mt-4 flex justify-end space-x-2">
                           <button
                             onClick={() => openEditModal(d)}
-                            className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
+                            className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 sm:mb-3 rounded"
                           >
                             수정
                           </button>
 
                           <button
                             onClick={() => handleDelete(d)}
-                            className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+                            className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 sm:mb-3 rounded"
                           >
                             삭제
                           </button>

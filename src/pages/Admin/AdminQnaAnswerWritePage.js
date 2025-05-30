@@ -76,24 +76,24 @@ const AdminQnaAnswerWritePage = ({ qno }) => {
       <table className="table-auto border-collapse border border-gray-400 w-full">
         <thead className="bg-blue-800">
           <tr>
-            <th className="border border-gray-400 px-4 py-2 text-white">작성자ID</th>
+            <th className="border border-gray-400 px-4 py-2 text-white sm:text-base text-xs">작성자ID</th>
             <td className="border border-gray-400 px-4 py-2 bg-white">
               <input
                 name="userId"
                 readOnly
-                className="w-full focus-visible:outline-none"
+                className="w-full focus-visible:outline-none sm:text-base text-sm"
                 value={formData.userId}
               />
             </td>
           </tr>
           <tr>
-            <th className="border border-gray-400 px-4 py-2 text-white">작성일</th>
+            <th className="border border-gray-400 px-4 py-2 text-white sm:text-base text-xs">작성일</th>
             <td className="border border-gray-400 px-4 py-2 bg-white">
               <input
                 name="title"
                 value={today}
                 readOnly
-                className="w-full focus-visible:outline-none"
+                className="w-full focus-visible:outline-none sm:text-base text-sm"
               />
             </td>
           </tr>

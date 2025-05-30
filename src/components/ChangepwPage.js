@@ -52,16 +52,20 @@ const ChangepwPage = () => {
   // 테스트 유저 여부 체크를 위한 상수 선언
   const yourUserId = useSelector((state) => state.auth.userId) || "000000000";
   const [isTester, setIstester] = useState(true);
-  useEffect(()=>{
-    if(yourUserId == "000000000" || yourUserId == "100000001" || yourUserId == "210000000"){
+  useEffect(() => {
+    if (
+      yourUserId == "000000000" ||
+      yourUserId == "100000001" ||
+      yourUserId == "210000000"
+    ) {
       setIstester(true);
-      console.log("테스트 유저", isTester);
+      console.log("테스트 유저");
       setMessage("테스트 유저로 접속하셨습니다. 비밀번호 변경이 제한됩니다.");
     } else {
       setIstester(false);
-      console.log("일반 유저", isTester)
+      console.log("일반 유저");
     }
-  }, [])
+  }, []);
 
   return (
     <div className="flex justify-center items-start min-h-screen py-24">
@@ -154,7 +158,11 @@ const ChangepwPage = () => {
           )}
           <button
             type={`${!isTester ? "submit" : "button"}`}
-            className={`w-full text-white py-3 rounded font-semibold ${!isTester ? 'bg-blue-400 hover:bg-blue-800' : 'bg-gray-400 cursor-not-allowed'}`}
+            className={`w-full text-white py-3 rounded font-semibold ${
+              !isTester
+                ? "bg-blue-400 hover:bg-blue-800"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
           >
             비밀번호 변경
           </button>

@@ -45,7 +45,6 @@ const AdminSchedulePage = () => {
     }
   };
 
-
   const fetchSchedules = async (semesterId) => {
     const results = await Promise.all(
       SCHEDULE_TYPES.map(async ({ type }) => {
@@ -143,36 +142,46 @@ const AdminSchedulePage = () => {
   const getLabel = (type) =>
     SCHEDULE_TYPES.find((t) => t.type === type)?.label || type;
 
-    /* 테스트 아이디 권한 제약을 위한 코드 추가 */
+  /* 테스트 아이디 권한 제약을 위한 코드 추가 */
 
   // 테스트 유저 여부 체크를 위한 상수 선언
   const yourUserId = useSelector((state) => state.auth.userId) || "000000000";
   const [isTester, setIstester] = useState(true);
-  useEffect(()=>{
-    if(yourUserId == "000000000"){
+  useEffect(() => {
+    if (yourUserId == "000000000") {
       setIstester(true);
       console.log("테스트 유저", isTester);
     } else {
       setIstester(false);
-      console.log("일반 유저", isTester)
+      console.log("일반 유저", isTester);
     }
-  }, [])
+  }, []);
 
   return (
     <div className="w-4/5 mx-auto sm:w-full mt-4 sm:mt-6 md:mt-10">
       <div className="w-full sm:max-w-5xl sm:mx-auto bg-white shadow-md rounded-md p-4 md:p-6 lg:p-8 mb-8">
         <div className="mb-12">
-        {/* 테스터인 경우, 안내 메시지 추가 */}
-        <p className={`text-red-500 sm:text-right pb-3 sm:text-base text-xs ${!isTester ? 'hidden' : ''}`}>테스트 유저로 접속하셨습니다. 일부 권한이 제한됩니다.</p>
+          {/* 테스터인 경우, 안내 메시지 추가 */}
+          <p
+            className={`text-red-500 sm:text-right pb-3 sm:text-base text-xs ${
+              !isTester ? "hidden" : ""
+            }`}
+          >
+            테스트 유저로 접속하셨습니다. 일부 권한이 제한됩니다.
+          </p>
           <div className="flex justify-between items-center border-b pb-3 mb-6">
             <h2 className="text-2xl font-semibold text-gray-700">학기 설정</h2>
             <button
               onClick={() => {
-                if(!isTester){
-                  setIsSemesterModalOpen(true)
+                if (!isTester) {
+                  setIsSemesterModalOpen(true);
                 }
               }}
-              className={`px-4 py-2 text-white rounded transition text-sm font-medium ${!isTester ? 'bg-blue-700 hover:bg-blue-800': 'bg-gray-400 cursor-not-allowed'}`}
+              className={`px-4 py-2 text-white rounded transition text-sm font-medium ${
+                !isTester
+                  ? "bg-blue-700 hover:bg-blue-800"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
             >
               학기 등록
             </button>
@@ -281,15 +290,30 @@ const AdminSchedulePage = () => {
                         <td className="py-3 px-4 space-x-2">
                           <button
                             onClick={() => {
-                              if(!isTester){setEditSemester(s);setIsEditModalOpen(true);}
+                              if (!isTester) {
+                                setEditSemester(s);
+                                setIsEditModalOpen(true);
+                              }
                             }}
-                            className={`text-white px-3 py-1 rounded text-xs font-medium transition ${!isTester ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-400 cursor-not-allowed'}`}
+                            className={`text-white px-3 py-1 rounded text-xs font-medium transition ${
+                              !isTester
+                                ? "bg-green-600 hover:bg-green-700"
+                                : "bg-gray-400 cursor-not-allowed"
+                            }`}
                           >
                             수정
                           </button>
                           <button
-                            onClick={() => {if(!isTester){handleDeleteSemester(s);}}}
-                            className={`text-white px-3 py-1 rounded text-xs font-medium transition ${!isTester ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-400 cursor-not-allowed'}`}
+                            onClick={() => {
+                              if (!isTester) {
+                                handleDeleteSemester(s);
+                              }
+                            }}
+                            className={`text-white px-3 py-1 rounded text-xs font-medium transition ${
+                              !isTester
+                                ? "bg-red-600 hover:bg-red-700"
+                                : "bg-gray-400 cursor-not-allowed"
+                            }`}
                           >
                             삭제
                           </button>
@@ -310,7 +334,11 @@ const AdminSchedulePage = () => {
           <div className="mb-6">
             <select
               value={selectedSemesterId || ""}
-              onChange={(e) => setSelectedSemesterId(e.target.value ? Number(e.target.value) : null)}
+              onChange={(e) =>
+                setSelectedSemesterId(
+                  e.target.value ? Number(e.target.value) : null
+                )
+              }
               className="px-3 py-2 w-full sm:w-64 border border-gray-300 rounded-md shadow-sm text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
             >
               <option value="">학기 선택</option>
@@ -458,12 +486,16 @@ const AdminSchedulePage = () => {
                           <td className="py-3 px-4">
                             <button
                               onClick={() => {
-                                if(!isTester){
-                                setEditSchedule(s);
-                                setIsScheduleModalOpen(true);
+                                if (!isTester) {
+                                  setEditSchedule(s);
+                                  setIsScheduleModalOpen(true);
                                 }
                               }}
-                              className={`text-white px-3 py-1 rounded text-xs font-medium transition ${!isTester ? 'bg-blue-700 hover:bg-blue-800' : 'bg-gray-400 cursor-not-allowed'}`}
+                              className={`text-white px-3 py-1 rounded text-xs font-medium transition ${
+                                !isTester
+                                  ? "bg-blue-700 hover:bg-blue-800"
+                                  : "bg-gray-400 cursor-not-allowed"
+                              }`}
                             >
                               설정
                             </button>

@@ -51,14 +51,14 @@ function LoginPage() {
 
   const handleChecked = async () => {
     const isChecked = document.getElementById("rememberId").checked;
-    if (!isChecked){
+    if (!isChecked) {
       localStorage.removeItem("savedUserId");
     }
-  }
+  };
 
   useEffect(() => {
     handleChecked();
-  }, [])
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -123,13 +123,13 @@ function LoginPage() {
   const [accountModal, setAccountModal] = useState(true);
 
   const handleTestUserLogin = (id) => {
-  setUser({
-    ...user,
-    userId: id,
-    userPassword: "test",
-  });
-  setAccountModal(false);
-};
+    setUser({
+      ...user,
+      userId: id,
+      userPassword: "test",
+    });
+    setAccountModal(false);
+  };
 
   return (
     <div className="relative w-screen h-screen overflow-hidden">
@@ -154,8 +154,12 @@ function LoginPage() {
             className="w-12 h-12 sm:w-16 md:w-20 sm:h-16 md:h-20 rounded-full"
           />
           <div>
-            <h1 className="text-white text-xl sm:text-2xl md:text-3xl font-bold">이온대학교</h1>
-            <p className="text-white text-xs sm:text-sm md:text-base">EON UNIVERSITY</p>
+            <h1 className="text-white text-xl sm:text-2xl md:text-3xl font-bold">
+              이온대학교
+            </h1>
+            <p className="text-white text-xs sm:text-sm md:text-base">
+              EON UNIVERSITY
+            </p>
           </div>
         </div>
       </div>
@@ -195,13 +199,13 @@ function LoginPage() {
               </li>
             </ul>
 
-            <div
-              className="absolute top-full h-0.5 bg-blue-800 z-0 w-full left-0 sm:w-72 sm:left-[108px]"
-            />
+            <div className="absolute top-full h-0.5 bg-blue-800 z-0 w-full left-0 sm:w-72 sm:left-[108px]" />
           </div>
 
           {message && (
-            <p className="text-red-500 text-center text-sm sm:text-base mb-2">{message}</p>
+            <p className="text-red-500 text-center text-sm sm:text-base mb-2">
+              {message}
+            </p>
           )}
 
           <div className="bg-white border border-gray-300 rounded px-3 py-2 mb-3 flex items-center">
@@ -222,14 +226,16 @@ function LoginPage() {
             <label className="flex items-center gap-1 sm:gap-2 whitespace-nowrap ml-auto">
               <input
                 type="checkbox"
-                id = "rememberId"
+                id="rememberId"
                 name="remember"
                 className="w-3 h-3 sm:w-4 sm:h-3"
                 checked={user.remember}
                 onChange={handleChange}
                 onClick={handleChecked}
               />
-              <span className="text-xs sm:text-sm text-gray-500">학번 저장</span>
+              <span className="text-xs sm:text-sm text-gray-500">
+                학번 저장
+              </span>
             </label>
           </div>
 
@@ -315,7 +321,10 @@ function LoginPage() {
             >
               ✕
             </button>
-            <form onSubmit={handleFindIdSubmit} className="space-y-4 sm:space-y-5">
+            <form
+              onSubmit={handleFindIdSubmit}
+              className="space-y-4 sm:space-y-5"
+            >
               <h2 className="text-xl sm:text-2xl text-blue-800 font-bold text-center mb-2">
                 학번 찾기
               </h2>
@@ -366,7 +375,10 @@ function LoginPage() {
             >
               ✕
             </button>
-            <form onSubmit={handleFindPwSubmit} className="space-y-4 sm:space-y-5">
+            <form
+              onSubmit={handleFindPwSubmit}
+              className="space-y-4 sm:space-y-5"
+            >
               <h2 className="text-xl sm:text-2xl text-blue-800 font-bold text-center mb-2">
                 비밀번호 찾기
               </h2>
@@ -408,7 +420,9 @@ function LoginPage() {
             >
               ✕
             </button>
-            <p className="text-center text-gray-800 text-sm sm:text-base">{resultMessage}</p>
+            <p className="text-center text-gray-800 text-sm sm:text-base">
+              {resultMessage}
+            </p>
             <button
               className="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-700 text-sm sm:text-base"
               onClick={() => setShowResultModal(false)}
@@ -422,7 +436,11 @@ function LoginPage() {
       {accountModal && (
         <BaseModal isOpen={accountModal} onClose={() => setAccountModal(false)}>
           <div className="text-center">
-            <img src="/images/test_account_modal.png" alt="Test Accounts" className="mx-auto mb-6 rounded-lg w-full max-w-xs" />
+            <img
+              src="/images/test_account_modal.png"
+              alt="Test Accounts"
+              className="mx-auto mb-6 rounded-lg w-full max-w-xs"
+            />
             <div className="space-y-3 px-4 pb-4">
               <button
                 onClick={() => handleTestUserLogin("000000000")}

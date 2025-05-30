@@ -9,7 +9,6 @@ import AdminUserEditPage from "./AdminUserEditPage";
 import useConfirmModal from "../../hooks/useConfirmModal";
 import AdminUserMultiUploadPage from "./AdminUserMultiUploadPage";
 
-
 const AdminUserListPage = () => {
   const dispatch = useDispatch();
   const { openConfirm, ConfirmModalComponent } = useConfirmModal();
@@ -49,7 +48,7 @@ const AdminUserListPage = () => {
         try {
           await deleteUser(user.userId);
           dispatch(showModal("사용자가 성공적으로 삭제되었습니다."));
-          fetchUsers(users.current);
+          fetchUsers(currentPage);
         } catch (err) {
           dispatch(
             showModal({
@@ -63,6 +62,7 @@ const AdminUserListPage = () => {
   };
 
   const handleSort = (field) => {
+    if (field === "actions") return;
     setSortDir(sortField === field && sortDir === "asc" ? "desc" : "asc");
     setSortField(field);
   };
@@ -81,26 +81,54 @@ const AdminUserListPage = () => {
   };
 
   const tableHeaders = [
-    { label: "학번/ID", field: "userId", desktopAlignment: "sm:text-center" },
-    { label: "이름", field: "userName", desktopAlignment: "sm:text-left" },
+    {
+      label: "학번/ID",
+      field: "userId",
+      thClassName: "md:text-center",
+      tdClassName: "md:text-center",
+    },
+    {
+      label: "이름",
+      field: "userName",
+      thClassName: "md:text-center",
+      tdClassName: "md:text-center",
+    },
     {
       label: "생년월일",
       field: "userBirth",
-      desktopAlignment: "sm:text-center",
+      thClassName: "md:text-center",
+      tdClassName: "md:text-center",
     },
-    { label: "이메일", field: "userEmail", desktopAlignment: "sm:text-center" },
+    {
+      label: "이메일",
+      field: "userEmail",
+      thClassName: "md:text-center",
+      tdClassName: "md:text-center",
+    },
     {
       label: "전화번호",
       field: "userPhone",
-      desktopAlignment: "sm:text-center",
+      thClassName: "md:text-center",
+      tdClassName: "md:text-center",
     },
-    { label: "구분", field: "userRole", desktopAlignment: "sm:text-center" },
+    {
+      label: "구분",
+      field: "userRole",
+      thClassName: "md:text-center",
+      tdClassName: "md:text-center",
+    },
     {
       label: "학과",
       field: "departmentName",
-      desktopAlignment: "sm:text-center",
+      thClassName: "md:text-center",
+      tdClassName: "md:text-center",
     },
-    { label: "관리", field: "actions", desktopAlignment: "sm:text-center" },
+    {
+      label: "관리",
+      field: "actions",
+      thClassName: "md:text-center",
+      tdClassName: "md:text-center",
+    },
   ];
 
   const renderUserValue = (user, header) => {
@@ -124,89 +152,91 @@ const AdminUserListPage = () => {
     }
   };
 
-  /* 테스트 아이디 권한 제약을 위한 코드 추가 */
-
-  // 테스트 유저 여부 체크를 위한 상수 선언
   const yourUserId = useSelector((state) => state.auth.userId) || "000000000";
   const [isTester, setIstester] = useState(true);
-  useEffect(()=>{
-    if(yourUserId == "000000000"){
-      setIstester(true);
-      console.log("테스트 유저", isTester);
-    } else {
-      setIstester(false);
-      console.log("일반 유저", isTester)
-    }
-  }, [])
+
+  useEffect(() => {
+    setIstester(yourUserId === "000000000");
+  }, [yourUserId]);
+
   return (
-    <div className="w-3/5 mx-auto sm:w-full mt-4 sm:mt-6 md:mt-10">
-      <div className="w-full sm:max-w-5xl sm:mx-auto px-2 py-3 sm:px-4 sm:py-6 md:px-6 md:py-8 bg-white shadow-md rounded-md mb-8">
-        {/* 테스터인 경우, 안내 메시지 추가 */}
-        <p className={`text-red-500 sm:text-right pb-3 sm:text-base text-xs ${!isTester ? 'hidden' : ''}`}>테스트 유저로 접속하셨습니다. 일부 권한이 제한됩니다.</p>
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b pb-3 mb-4 sm:mb-6">
-          {/* 테스트 유저인 경우, 등록 버튼 비활성화 */}
-          <h2 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-2 sm:mb-0">
+    <div className="max-w-7xl mx-auto px-1 py-1 sm:px-2 md:px-4 md:py-8 mt-2 md:mt-10">
+      <div className="w-full bg-white shadow-md rounded-md p-2 sm:p-4 md:p-6">
+        {isTester && (
+          <p className="text-red-500 text-center pb-2 text-xs sm:text-right sm:text-sm md:text-base">
+            테스트 유저로 접속하셨습니다.{" "}
+            <span className="sm:hidden">
+              <br />
+            </span>
+            일부 권한이 제한됩니다.
+          </p>
+        )}
+        <div className="flex flex-col md:flex-row justify-between items-center border-b pb-2 mb-3 md:pb-3 md:mb-6">
+          <h2 className="text-lg font-semibold text-gray-700 md:text-2xl mb-2 md:mb-0">
             사용자 관리
           </h2>
-          <div className="flex flex-col sm:flex-row gap-2 mt-2 sm:mt-0">
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
             <button
-              onClick={() => {if(!isTester){
-               setIsModalOpen(true) 
-              }}}
-              className={`w-full sm:w-auto px-3 py-1.5 sm:px-4 sm:py-2 text-white rounded ${!isTester ? 'bg-blue-700 hover:bg-blue-800' : 'bg-gray-400 cursor-not-allowed'} transition text-sm`
-            }>
+              onClick={() => !isTester && setIsModalOpen(true)}
+              className={`w-full sm:w-auto px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm text-white rounded transition ${
+                !isTester
+                  ? "bg-blue-700 hover:bg-blue-800"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
+              disabled={isTester}
+            >
               사용자 등록
             </button>
             <button
-              onClick={() => {if(!isTester){
-               setIsMultiUploadModalOpen(true) 
-              }}}
-              className={`w-full sm:w-auto px-3 py-1.5 sm:px-4 sm:py-2 text-white rounded transition text-sm ${!isTester ? 'bg-yellow-600 hover:bg-yellow-800' : 'bg-gray-400 cursor-not-allowed'}`
-          }>
+              onClick={() => !isTester && setIsMultiUploadModalOpen(true)}
+              className={`w-full sm:w-auto px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm text-white rounded transition ${
+                !isTester
+                  ? "bg-yellow-600 hover:bg-yellow-700"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
+              disabled={isTester}
+            >
               일괄 등록
             </button>
           </div>
         </div>
-        <div className="flex justify-end mb-4 sm:mb-6">
+        <div className="flex justify-end mb-3 md:mb-4">
           <input
             type="text"
             placeholder="ID 또는 이름으로 검색"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="border border-gray-300 rounded px-3 py-2 shadow-sm w-full sm:w-64 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-sm"
+            className="border border-gray-300 rounded px-2 py-1 text-xs md:px-3 md:py-2 md:text-sm shadow-sm w-full sm:w-auto md:w-64 focus:ring-1 md:focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
           />
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full sm:min-w-full sm:table-auto">
-            <thead className="hidden sm:table-header-group bg-gray-50 text-gray-600 uppercase text-xs leading-normal border">
+          <table className="w-full table-auto">
+            <thead className="hidden md:table-header-group bg-gray-50 text-gray-600 uppercase text-xs md:text-sm leading-normal">
               <tr>
-                {tableHeaders.map(({ label, field, desktopAlignment }) => (
+                {tableHeaders.map(({ label, field, thClassName }) => (
                   <th
                     key={label}
-                    className={`py-3 px-4 cursor-pointer border-b ${
-                      field !== "actions" ? "text-left" : "text-center"
-                    } ${desktopAlignment} `}
-                    onClick={() =>
-                      field !== "actions" && field !== null && handleSort(field)
-                    }
+                    className={`py-3 px-4 font-semibold border-b border-gray-200 ${
+                      thClassName || "md:text-left"
+                    }`}
+                    onClick={() => handleSort(field)}
                   >
                     {label}
-                    {field !== "actions" &&
-                      field !== null &&
+                    {field &&
+                      field !== "actions" &&
                       sortField === field &&
                       (sortDir === "asc" ? " ▲" : " ▼")}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="block sm:table-row-group text-gray-700 text-sm border">
+            <tbody className="block md:table-row-group text-[0.65rem] md:text-sm text-gray-700">
               {users.dtoList.length === 0 ? (
-                <tr className="block sm:table-row w-full">
-                  
+                <tr className="block md:table-row">
                   <td
                     colSpan={tableHeaders.length}
-                    className="block sm:table-cell py-6 text-center text-gray-400 text-xs sm:text-sm w-full"
+                    className="block md:table-cell py-6 text-center text-gray-400"
                   >
                     사용자 정보가 없습니다.
                   </td>
@@ -215,58 +245,90 @@ const AdminUserListPage = () => {
                 users.dtoList.map((user) => (
                   <tr
                     key={user.userId}
-                    className="block w-full mb-3 border border-gray-200 rounded-lg shadow-md px-3 py-2 hover:bg-gray-50 
-                               sm:table-row sm:shadow-none sm:rounded-none sm:border-0 sm:border-b sm:border-gray-200 sm:p-0 sm:hover:bg-gray-100"
+                    className="block w-full mb-2 border border-gray-200 rounded-lg shadow-sm px-2 py-1.5 
+                               md:table-row md:shadow-none md:rounded-none md:border-0 md:border-b md:hover:bg-gray-50 md:p-0"
                   >
                     {tableHeaders.map((header) => (
                       <td
                         key={`${user.userId}-${header.field}`}
                         data-label={header.label}
                         className={`
+                          block text-left pt-0.5 pb-0.5 relative
+                          md:table-cell md:py-3 md:px-4 md:align-middle
+                          ${header.tdClassName || "md:text-left"}
                           ${
                             header.field === "userName"
-                              ? "block order-first sm:order-none font-bold text-blue-700 sm:text-gray-700 pb-1 mb-1 border-b sm:border-b-0 sm:pb-2 sm:mb-0 text-base sm:text-sm sm:font-normal"
-                              : "block pt-0.5 pb-0.5 text-xs sm:text-sm"
-                          }
-                          sm:table-cell sm:h-12 sm:py-2 sm:px-4 sm:align-middle 
-                          ${header.desktopAlignment}
+                              ? "order-first font-semibold text-blue-600 text-sm pb-1 mb-1 border-b md:order-none md:font-normal md:text-gray-700 md:text-sm md:border-b-0"
+                              : "text-gray-600 md:text-gray-700"
+                          } 
                         `}
-                        onMouseEnter={() =>
-                          header.field === "userName" && setHoveredUser(user)
-                        }
-                        onMouseLeave={() =>
-                          header.field === "userName" && setHoveredUser(null)
-                        }
+                        onMouseEnter={() => {
+                          if (header.field === "userName") {
+                            setHoveredUser(user);
+                          }
+                        }}
+                        onMouseLeave={() => {
+                          if (header.field === "userName") {
+                            setHoveredUser(null);
+                          }
+                        }}
                       >
                         {header.field !== "userName" &&
                           header.field !== "actions" && (
-                            <span className="font-medium sm:hidden mr-1 text-gray-500">
+                            <span className="font-medium md:hidden mr-1 text-gray-500 text-[0.6rem]">
                               {header.label}:{" "}
                             </span>
                           )}
+
                         {header.field !== "actions" ? (
-                          <span className="break-words">
+                          <span
+                            className={`break-words ${
+                              header.field === "userName"
+                                ? ""
+                                : "text-[0.65rem] md:text-sm"
+                            }`}
+                          >
+                            {" "}
+                            {/* md:whitespace-nowrap 제거됨 */}
                             {renderUserValue(user, header)}
                           </span>
                         ) : (
-                          <div className={`flex flex-row items-center justify-start space-x-1 sm:justify-center sm:space-x-1 pt-0.5 sm:pt-0 ${!isTester ? '' : 'hidden'}`}>
+                          <div
+                            className={`flex flex-row items-center space-x-1 pt-0.5 md:pt-0 ${
+                              header.tdClassName &&
+                              header.tdClassName.includes("md:text-center")
+                                ? "md:justify-center"
+                                : "md:justify-start"
+                            } ${isTester ? "opacity-50" : ""}`}
+                          >
                             <button
-                              onClick={() => setEditUser(user)}
-                              className="w-14 sm:w-auto text-white bg-green-600 px-2 py-1 rounded hover:bg-green-700 text-xs"
+                              onClick={() => !isTester && setEditUser(user)}
+                              disabled={isTester}
+                              className={`w-auto text-white px-1.5 py-0.5 text-[0.6rem] rounded md:px-2 md:py-1 md:text-xs transition ${
+                                !isTester
+                                  ? "bg-green-500 hover:bg-green-600"
+                                  : "bg-gray-400 cursor-not-allowed"
+                              }`}
                             >
                               수정
                             </button>
                             <button
-                              onClick={() => handleDelete(user)}
-                              className="w-14 sm:w-auto text-white bg-red-600 px-2 py-1 rounded hover:bg-red-700 text-xs"
+                              onClick={() => !isTester && handleDelete(user)}
+                              disabled={isTester}
+                              className={`w-auto text-white px-1.5 py-0.5 text-[0.6rem] rounded md:px-2 md:py-1 md:text-xs transition ${
+                                !isTester
+                                  ? "bg-red-500 hover:bg-red-600"
+                                  : "bg-gray-400 cursor-not-allowed"
+                              }`}
                             >
                               삭제
                             </button>
                           </div>
                         )}
+
                         {header.field === "userName" &&
                           hoveredUser?.userId === user.userId && (
-                            <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 w-24 h-24 bg-white border-2 border-blue-200 rounded-md shadow-lg z-20 overflow-hidden">
+                            <div className="hidden md:block absolute top-0 left-full ml-2 w-20 h-20 md:w-24 md:h-24 bg-white border border-gray-300 rounded-md shadow-lg z-20 overflow-hidden">
                               <img
                                 src={
                                   hoveredUser.userImgUrl
@@ -307,7 +369,7 @@ const AdminUserListPage = () => {
           <AdminUserEditPage
             user={editUser}
             onSuccess={() => {
-              fetchUsers(users.current);
+              fetchUsers(currentPage);
               setEditUser(null);
             }}
             onClose={() => setEditUser(null)}
